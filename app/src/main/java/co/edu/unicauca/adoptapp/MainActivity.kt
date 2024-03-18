@@ -21,6 +21,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -92,42 +95,87 @@ fun CardElement(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        //shape = MaterialTheme.shapes.medium,
-        shape = RoundedCornerShape(10.dp),
+        shape = MaterialTheme.shapes.medium,
+        //shape = RoundedCornerShape(10.dp),
         color = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = modifier,
-        shadowElevation = 20.dp
-
+        modifier = Modifier.fillMaxSize(),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.width(455.dp)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource(drawable),
-                contentDescription = null,
-                contentScale = ContentScale.None,
-                modifier = Modifier.size(200.dp)
-            )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(all = 20.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = null
+                    )
+                    Column(
+                        modifier = Modifier.padding(all = 5.dp),
+                    ) {
 
-            Column(
-                modifier = Modifier.padding(all = 5.dp),
+                        Text(
+                            text = "Milthon Caicedo",
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Row(
+
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = null
+                            )
+                            Text(
+                                text = "Popayán Cauca",
+                            )
+                        }
+                    }
+                    Column (
+                        horizontalAlignment = Alignment.End,
+                        modifier = modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FavoriteBorder,
+                            contentDescription = null
+                        )
+                    }
+                }
+
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.width(455.dp)
             ) {
-
-            Text(
-                text = stringResource(text),
-                style = MaterialTheme.typography.titleMedium,
-            )
-                Spacer(modifier = Modifier.height(5.dp))
-            Text(
-                text = "Pitbull",
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-                modifier = Modifier.padding()
+                Image(
+                    painter = painterResource(drawable),
+                    contentDescription = null,
+                    contentScale = ContentScale.None,
+                    modifier = Modifier.size(200.dp)
                 )
+
+                Column(
+                    modifier = Modifier.padding(all = 5.dp),
+                ) {
+
+                    Text(
+                        text = stringResource(text),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(
+                        text = "Pitbull",
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
+                        modifier = Modifier.padding()
+                    )
+                }
             }
+
         }
     }
 
