@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AdoptApp</string>
+    <string name="placeholder_search">Buscar</string>
+    <string name="image_example_1">Tor</string>
+</resources>
