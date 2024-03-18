@@ -13,9 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.SearchBar
+import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -28,6 +31,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
         Login(Modifier.align(Alignment.Center), viewModel)
     }
 }
+
 
 @Composable
 fun Login(modifier: Modifier, viewModel: LoginViewModel) {
@@ -44,6 +48,8 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
         }
     } else {
         Column(modifier = modifier) {
+            Title(modifier = Modifier.align(Alignment.CenterHorizontally))
+            Spacer(modifier = Modifier.padding(14.dp))
             HeaderImage(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(16.dp))
             EmailField(email) { viewModel.onLoginChanged(it, password) }
@@ -61,6 +67,19 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    // Crea un LoginViewModel simulado
+    val mockViewModel = object : LoginViewModel() {
+        // Sobrescribe las propiedades y funciones según sea necesario para la vista previa
+    }
+
+    // Usa el ViewModel simulado en LoginScreen
+    LoginScreen(mockViewModel)
+}
+
+
 @Composable
 fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
     Button(
@@ -69,14 +88,20 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF16C2D8),
-            disabledBackgroundColor = Color(0xFF73CBE6),
+            //backgroundColor = Color(0xFF16C2D8),
+            backgroundColor = Color(MaterialTheme.colors.primary),
+            //disabledBackgroundColor = Color(0xFF73CBE6),
+            disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
             disabledContentColor = Color.White
         ), enabled = loginEnable
     ) {
         Text(text = "Iniciar sesión")
     }
+}
+
+fun Color(color: Color): Color {
+    return color
 }
 
 @Composable
@@ -133,4 +158,9 @@ fun HeaderImage(modifier: Modifier) {
         contentDescription = "Header",
         modifier = modifier
     )
+}
+
+@Composable
+fun Title(modifier: Modifier) {
+
 }
