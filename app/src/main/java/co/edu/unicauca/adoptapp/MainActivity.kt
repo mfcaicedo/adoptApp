@@ -25,6 +25,8 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -44,6 +46,12 @@ import androidx.compose.ui.unit.dp
 import co.edu.unicauca.adoptapp.ui.login.LoginScreen
 import co.edu.unicauca.adoptapp.ui.login.LoginViewModel
 import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
+import co.edu.unicauca.adoptapp.ui.theme.backgroundDark
+import co.edu.unicauca.adoptapp.ui.theme.backgroundLight
+import co.edu.unicauca.adoptapp.ui.theme.onPrimaryLight
+import co.edu.unicauca.adoptapp.ui.theme.primaryContainerLight
+import co.edu.unicauca.adoptapp.ui.theme.primaryDark
+import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +64,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 )
                 {
-                    LoginScreen(LoginViewModel())
+                    //LoginScreen(LoginViewModel())
+                    CardElement(
+                        text = R.string.image_example_1,
+                        drawable = R.drawable.image_example_1,
+                    )
                 }
                 /*
                 {
@@ -114,7 +126,9 @@ fun CardElement(
         ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp, vertical = 5.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
@@ -181,6 +195,14 @@ fun CardElement(
                         text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
                         modifier = Modifier.padding()
                     )
+                    Button(
+                        onClick = { /*TODO*/ },
+                        colors = ButtonDefaults.buttonColors(
+                            primaryLight
+                        ),
+                    ) {
+                        Text(text = "Adoptar")
+                    }
                 }
             }
 
@@ -190,7 +212,7 @@ fun CardElement(
 }
 
 
-        @Composable
+@Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
