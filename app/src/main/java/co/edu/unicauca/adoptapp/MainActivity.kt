@@ -106,7 +106,7 @@ fun CardElement(
         ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().padding(all = 20.dp)
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
