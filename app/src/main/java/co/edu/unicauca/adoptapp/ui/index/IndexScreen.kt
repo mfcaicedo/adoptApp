@@ -6,6 +6,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,10 +37,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -51,6 +56,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,9 +64,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
+import co.edu.unicauca.adoptapp.ui.theme.onPrimaryLight
 import co.edu.unicauca.adoptapp.ui.theme.primaryLight
+import co.edu.unicauca.adoptapp.ui.theme.scrimLight
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun SearchBar(
@@ -84,7 +93,9 @@ fun SearchBar(
         },
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 56.dp)
+            .heightIn(min = 50.dp)
+            .height(50.dp)
+            .padding(end = 2.dp)
     )
 }
 
@@ -265,16 +276,47 @@ fun CarouselScreen() {
 }
 
 @Composable
+fun MenuButton() {
+    IconButton(
+        onClick = { /*TODO*/ },
+        modifier = Modifier.padding(2.dp),
+        ) {
+        Icon(
+            imageVector = Icons.Default.Menu,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.scrim,
+            modifier = Modifier.size(34.dp)
+        )
+    }
+}
+@Composable
+fun SidebarScreen(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+    ) {
+    }
+}
+
+@Composable
 fun IndexScreen() {
     Column(
         modifier = Modifier
     ) {
         Row(
-            modifier = Modifier
+            modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            SearchBar(
-                modifier = Modifier.padding(10.dp)
-            )
+            Column {
+                MenuButton()
+            }
+            Column {
+                SearchBar(
+                    modifier = Modifier.padding(5.dp)
+                )
+            }
         }
         Row(
             modifier = Modifier
