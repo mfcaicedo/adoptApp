@@ -3,4 +3,13 @@
     <string name="placeholder_search">Buscar</string>
     <string name="image_example_1">Tor</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</string>
+    <string name="item_home">Inicio</string>
+    <string name="item_my_adoptions">Mis adopciones</string>
+    <string name="item_my_post">Mis publicaciones</string>
+    <string name="item_profile">Mi perfil</string>
+    <string name="item_favorites">Favoritos</string>
+    <string name="item_categories">Categorías</string>
+    <string name="item_more_services">Más servicios</string>
+    <string name="item_about_us">Acerca de nosotros</string>
+    <string name="item_settings">Configuración</string>
 </resources>

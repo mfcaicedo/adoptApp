@@ -34,6 +34,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +49,7 @@ import co.edu.unicauca.adoptapp.ui.index.CardElement
 import co.edu.unicauca.adoptapp.ui.index.IndexScreen
 import co.edu.unicauca.adoptapp.ui.login.LoginScreen
 import co.edu.unicauca.adoptapp.ui.login.LoginViewModel
+import co.edu.unicauca.adoptapp.ui.sidebar.MyNavDrawerApp
 import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
 import co.edu.unicauca.adoptapp.ui.theme.backgroundDark
 import co.edu.unicauca.adoptapp.ui.theme.backgroundLight
@@ -68,6 +71,7 @@ class MainActivity : ComponentActivity() {
                 {
                     //LoginScreen(LoginViewModel())
                     IndexScreen()
+                    //MyNavDrawerApp(remember { mutableStateOf(false) })
                 }
             }
         }
