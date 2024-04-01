@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.edu.unicauca.adoptapp.R
-import co.edu.unicauca.adoptapp.SearchBar
 import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
 import kotlinx.coroutines.launch
 
