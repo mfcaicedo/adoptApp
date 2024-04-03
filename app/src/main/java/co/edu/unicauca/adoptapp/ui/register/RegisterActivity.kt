@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun LoginScreen(viewModel: RegisterViewModel) {
     Box(
         Modifier
             .fillMaxSize()
@@ -48,12 +48,12 @@ fun LoginScreen(viewModel: LoginViewModel) {
 
 
 @Composable
-fun Register(modifier: Modifier, viewModel: LoginViewModel) {
+fun Register(modifier: Modifier, viewModel: RegisterViewModel) {
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
-    val name: String by viewModel.email.observeAsState(initial = "")
-    val number: String by viewModel.password.observeAsState(initial = "")
-    val address: String by viewModel.email.observeAsState(initial = "")
+    val name: String by viewModel.name.observeAsState(initial = "")
+    val number: String by viewModel.number.observeAsState(initial = "")
+    val address: String by viewModel.address.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
@@ -65,19 +65,19 @@ fun Register(modifier: Modifier, viewModel: LoginViewModel) {
     } else {
         Column(modifier = modifier) {
             Title(modifier = Modifier.align(Alignment.CenterHorizontally))
-            Spacer(modifier = Modifier.padding(14.dp))
+            Spacer(modifier = Modifier.padding(10.dp))
             HeaderImage(Modifier.align(Alignment.CenterHorizontally))
-            Spacer(modifier = Modifier.padding(16.dp))
-            NameField(name) { viewModel.onLoginChanged(it, number) }
-            Spacer(modifier = Modifier.padding(4.dp))
-            NumberPhone(number) { viewModel.onLoginChanged(name, it) }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Address(address) { viewModel.onLoginChanged(name, it) }
-            Spacer(modifier = Modifier.padding(8.dp))
-            EmailField(email) { viewModel.onLoginChanged(it, password) }
-            Spacer(modifier = Modifier.padding(4.dp))
-            PasswordField(password) { viewModel.onLoginChanged(email, it) }
-            Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.padding(10.dp))
+            NameField(name) { viewModel.onLoginChanged(email, password, it, number, address) }
+            Spacer(modifier = Modifier.padding(10.dp))
+            NumberPhone(number) { viewModel.onLoginChanged(email, password, name, it, address) }
+            Spacer(modifier = Modifier.padding(10.dp))
+            Address(address) { viewModel.onLoginChanged(email, password, name, number, it) }
+            Spacer(modifier = Modifier.padding(10.dp))
+            EmailField(email) { viewModel.onLoginChanged(it, password, name, number, address) }
+            Spacer(modifier = Modifier.padding(10.dp))
+            PasswordField(password) { viewModel.onLoginChanged(email, it, name, number, address) }
+            Spacer(modifier = Modifier.padding(10.dp))
             RegisterButton(loginEnable) {
                 coroutineScope.launch {
                     viewModel.onLoginSelected()
@@ -91,7 +91,7 @@ fun Register(modifier: Modifier, viewModel: LoginViewModel) {
 @Composable
 fun LoginScreenPreview() {
     // Crea un LoginViewModel simulado
-    val mockViewModel = object : LoginViewModel() {
+    val mockViewModel = object : RegisterViewModel() {
         // Sobrescribe las propiedades y funciones según sea necesario para la vista previa
     }
 
