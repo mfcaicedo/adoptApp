@@ -13,4 +13,5 @@
     <string name="item_more_services">Más servicios</string>
     <string name="item_about_us">Acerca de nosotros</string>
     <string name="item_settings">Configuración</string>
+    <string name="description_menu_icon">Menú AdoptApp</string>
 </resources>

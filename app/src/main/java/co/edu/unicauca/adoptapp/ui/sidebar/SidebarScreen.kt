@@ -17,10 +17,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,91 +71,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.index.CardElement
+import co.edu.unicauca.adoptapp.ui.index.SearchBar
 import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
 
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.time.format.TextStyle
-
-@Composable
-fun MyNavDrawerApp(isDarkTheme: MutableState<Boolean>) {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        gesturesEnabled = drawerState.isOpen || drawerState.isClosed,
-        drawerContent = {
-            MyDrawerContent(
-                onItemSelected = { title ->
-                    scope.launch {
-                        drawerState.close()
-                        val snackbarResult = snackbarHostState.showSnackbar(
-                            message = "¿Desea suscribirse a $title?",
-                            actionLabel = "Aceptar",
-                        )
-                        if (snackbarResult == SnackbarResult.ActionPerformed) {
-                            Toast.makeText(
-                                context,
-                                "Se ha suscrito a $title",
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                        }
-                    }
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                },
-                onBackPress = {
-                    if (drawerState.isOpen) {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    }
-                },
-            )
-        },
-    ) {
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
-            },
-            topBar = {
-                MyTopBar(
-                    isDarkTheme = isDarkTheme.value,
-                    onMenuClick = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    },
-                    onSwitchToggle = { isChecked ->
-                        isDarkTheme.value = isChecked
-                    }
-                )
-
-            },
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center,
-
-                ) {
-                Image(
-                    painter = painterResource(R.drawable.logo_adoptapp_final),
-                    contentDescription = "Mi imagen",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary)
-                )
-            }
-        }
-    }
-
-    LaunchedEffect(snackbarHostState.currentSnackbarData?.visuals?.duration) {
-        delay(2000)
-        snackbarHostState.currentSnackbarData?.dismiss()
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -169,8 +94,8 @@ fun MyTopBar(
             }) {
                 Icon(
                     imageVector = Icons.Default.Menu,
-                    contentDescription = stringResource(R.string.app_name),
-                    tint = colors.onPrimary,
+                    contentDescription = stringResource(R.string.description_menu_icon),
+                    tint = colors.scrim,
                 )
             }
         },
@@ -180,22 +105,8 @@ fun MyTopBar(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = stringResource(R.string.app_name),
-                    color = colors.onPrimary,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Switch(
-                    checked = isDarkTheme,
-                    onCheckedChange = { isChecked ->
-                        onSwitchToggle(isChecked)
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.secondary,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.tertiary
-                    )
+                SearchBar(
+                    modifier = Modifier.padding(5.dp)
                 )
             }
         },
@@ -212,16 +123,40 @@ fun MyDrawerContent(
 ) {
     val menu = listOf(
         MenuItem(
-            title = stringResource(R.string.app_name),
+            title = stringResource(R.string.item_home),
             icon = Icons.Default.Home,
         ),
         MenuItem(
-            title = stringResource(R.string.app_name),
+            title = stringResource(R.string.item_my_adoptions),
             icon = Icons.Default.Favorite,
         ),
         MenuItem(
-            title = stringResource(R.string.app_name),
-            icon = Icons.Default.AccountCircle,
+            title = stringResource(R.string.item_my_post),
+            icon = Icons.Default.Star,
+        ),
+        MenuItem(
+            title = stringResource(R.string.item_profile),
+            icon = Icons.Default.AccountBox,
+        ),
+        MenuItem(
+            title = stringResource(R.string.item_favorites),
+            icon = Icons.Default.FavoriteBorder,
+        ),
+        MenuItem(
+            title = stringResource(R.string.item_categories),
+            icon = Icons.Default.List,
+        ),
+        MenuItem(
+            title = stringResource(R.string.item_more_services),
+            icon = Icons.Default.AddCircle,
+        ),
+        MenuItem(
+            title = stringResource(R.string.item_about_us),
+            icon = Icons.Default.Info,
+        ),
+        MenuItem(
+            title = stringResource(R.string.item_settings),
+            icon = Icons.Default.Settings,
         ),
     )
 
@@ -241,24 +176,27 @@ fun MyDrawerContent(
                             Text(
                                 text = menuList.title,
 
-                                style = MaterialTheme.typography.labelMedium,
+                                style = MaterialTheme.typography.titleMedium,
                             )
                         },
-                        selected = menuList == menu[0],
+                        //selected = menuList == menu[0],
+                        selected = false,
                         icon = {
                             Icon(
                                 imageVector = menuList.icon,
                                 contentDescription = menuList.title,
-                                tint = MaterialTheme.colorScheme.onPrimary,
+                                tint = MaterialTheme.colorScheme.scrim,
                             )
                         },
                         onClick = {
                             onItemSelected.invoke(menuList.title)
                         },
                     )
+                    if (menuList == menu[4] || menuList == menu[6]){
+                        Divider()
+                    }
                 }
             }
-            Divider()
         }
     }
     BackPressHandler {
@@ -290,13 +228,5 @@ fun BackPressHandler(enabled: Boolean = true, onBackPressed: () -> Unit) {
         onDispose {
             backCallback.remove()
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewMyNavDrawerApp() {
-    AdoptAppTheme {
-        MyNavDrawerApp(remember { mutableStateOf(false) })
     }
 }

@@ -305,20 +305,6 @@ fun IndexScreen() {
         modifier = Modifier
     ) {
         Row(
-            modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column {
-                MenuButton()
-            }
-            Column {
-                SearchBar(
-                    modifier = Modifier.padding(5.dp)
-                )
-            }
-        }
-        Row(
             modifier = Modifier
         ) {
             Column(
