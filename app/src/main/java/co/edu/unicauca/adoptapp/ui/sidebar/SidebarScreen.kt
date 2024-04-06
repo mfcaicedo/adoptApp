@@ -159,15 +159,20 @@ fun MyDrawerContent(
             icon = Icons.Default.Settings,
         ),
     )
-
     ModalDrawerSheet(modifier) {
         Column(modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
                     .height(190.dp)
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary),//
-            )
+                    .background(MaterialTheme.colorScheme.primary),
+            ){
+                Image(
+                    painter = painterResource(id = R.drawable.logo_adoptapp_final),
+                    contentDescription = "Logo",
+                    modifier = Modifier.align(Alignment.Center),
+                )
+            }
             LazyColumn {
                 items(menu) { menuList ->
                     NavigationDrawerItem(
