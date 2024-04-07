@@ -31,6 +31,8 @@ import co.edu.unicauca.adoptapp.ui.index.IndexScreen
 import co.edu.unicauca.adoptapp.ui.navigation.MyDrawerContent
 import co.edu.unicauca.adoptapp.ui.navigation.MyTopBar
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
+import co.edu.unicauca.adoptapp.ui.posts.DetailPostScreen
+import co.edu.unicauca.adoptapp.ui.posts.MyPostsScreen
 import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -64,11 +66,11 @@ fun LearnNavDrawer() {
         gesturesEnabled = drawerState.isOpen || drawerState.isClosed,
         drawerContent = {
             MyDrawerContent(
-                onItemSelected = {
+                onItemSelected = {route ->
                     scope.launch {
                         drawerState.close()
                     }
-                    navigationController.navigate(it)
+                    navigationController.navigate(route)
                     //snackbarHostState.currentSnackbarData?.dismiss() //Cierra ventanas emergentes
                 },
                 onBackPress = {
@@ -101,18 +103,16 @@ fun LearnNavDrawer() {
             NavHost(navController = navigationController,
                     startDestination = NavigationScreens.Home.screen) {
                 composable(NavigationScreens.Home.screen) {
-                    IndexScreen()
+                    IndexScreen(navigationController)
                 }
                 composable(NavigationScreens.MyAdoptions(1).screen) {
                     AdoptionsScreen()
                 }
                 composable(NavigationScreens.MyPosts(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Mis publicaciones")
-                    }
+                    MyPostsScreen(1)
+                }
+                composable(NavigationScreens.DetailPost(1).screen) {
+                    DetailPostScreen(postId = 1)
                 }
                 composable(NavigationScreens.Profile(1).screen) {
                     Box(
