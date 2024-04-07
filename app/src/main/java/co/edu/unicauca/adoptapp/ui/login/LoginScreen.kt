@@ -64,6 +64,14 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
                     viewModel.onLoginSelected()
                 }
             }
+            Spacer(modifier = Modifier.padding(10.dp))
+            Options(Modifier.align(Alignment.CenterHorizontally))
+            Spacer(modifier = Modifier.padding(10.dp))
+            InvitadoButton(loginEnable) {
+                coroutineScope.launch {
+                    viewModel.onLoginSelected()
+                }
+            }
         }
     }
 }
@@ -101,6 +109,26 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
     }
 }
 
+@Composable
+fun InvitadoButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+    Button(
+        onClick = { onLoginSelected() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color(0xFF16C2D8),
+            //backgroundColor = Color(MaterialTheme.colors.primary),
+            disabledBackgroundColor = Color(0xFF73CBE6),
+            //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
+            contentColor = Color.White,
+            disabledContentColor = Color.White
+        ), enabled = loginEnable
+    ) {
+        Text(text = "Invitado")
+    }
+}
+
 fun Color(color: Color): Color {
     return color
 }
@@ -110,6 +138,17 @@ fun ForgotPassword(modifier: Modifier) {
     Text(
         text = "Olvidaste la contraseña?",
         modifier = modifier.clickable { },
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color(0xFF83CBE1)
+    )
+}
+
+@Composable
+fun Options(modifier: Modifier) {
+    Text(
+        text = "O inicie con",
+        modifier = modifier,
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = Color(0xFF83CBE1)
