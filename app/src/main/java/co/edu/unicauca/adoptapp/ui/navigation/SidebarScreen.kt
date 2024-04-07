@@ -1,7 +1,5 @@
-package co.edu.unicauca.adoptapp.ui.sidebar
+package co.edu.unicauca.adoptapp.ui.navigation
 
-import android.graphics.Paint.Style
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
@@ -18,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -29,50 +26,29 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import co.edu.unicauca.adoptapp.R
-import co.edu.unicauca.adoptapp.ui.index.CardElement
 import co.edu.unicauca.adoptapp.ui.index.SearchBar
-import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -113,50 +89,59 @@ fun MyTopBar(
     )
 }
 
-data class MenuItem(val title: String, val icon: ImageVector)
+data class MenuItem(val title: String, val icon: ImageVector, val route: String)
 
 @Composable
 fun MyDrawerContent(
     modifier: Modifier = Modifier,
-    onItemSelected: (title: String) -> Unit,
+    onItemSelected: (route: String) -> Unit,
     onBackPress: () -> Unit,
 ) {
     val menu = listOf(
         MenuItem(
             title = stringResource(R.string.item_home),
             icon = Icons.Default.Home,
+            route = NavigationScreens.Home.screen
         ),
         MenuItem(
             title = stringResource(R.string.item_my_adoptions),
             icon = Icons.Default.Favorite,
+            route = NavigationScreens.MyAdoptions(userId = 1).screen
         ),
         MenuItem(
             title = stringResource(R.string.item_my_post),
             icon = Icons.Default.Star,
+            route = NavigationScreens.MyPosts(userId = 1).screen
         ),
         MenuItem(
             title = stringResource(R.string.item_profile),
             icon = Icons.Default.AccountBox,
+            route = NavigationScreens.Profile(userId = 1).screen
         ),
         MenuItem(
             title = stringResource(R.string.item_favorites),
             icon = Icons.Default.FavoriteBorder,
+            route = NavigationScreens.Favorites(userId = 1).screen
         ),
         MenuItem(
             title = stringResource(R.string.item_categories),
             icon = Icons.Default.List,
+            route = NavigationScreens.Categories(userId = 1).screen
         ),
         MenuItem(
             title = stringResource(R.string.item_more_services),
             icon = Icons.Default.AddCircle,
+            route = NavigationScreens.MoreServices(userId = 1).screen
         ),
         MenuItem(
             title = stringResource(R.string.item_about_us),
             icon = Icons.Default.Info,
+            route = NavigationScreens.AboutUs(userId = 1).screen
         ),
         MenuItem(
             title = stringResource(R.string.item_settings),
             icon = Icons.Default.Settings,
+            route = NavigationScreens.Settings.screen
         ),
     )
     ModalDrawerSheet(modifier) {
@@ -180,7 +165,6 @@ fun MyDrawerContent(
                         label = {
                             Text(
                                 text = menuList.title,
-
                                 style = MaterialTheme.typography.titleMedium,
                             )
                         },
@@ -194,7 +178,7 @@ fun MyDrawerContent(
                             )
                         },
                         onClick = {
-                            onItemSelected.invoke(menuList.title)
+                            onItemSelected.invoke(menuList.route)
                         },
                     )
                     if (menuList == menu[4] || menuList == menu[6]){

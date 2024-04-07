@@ -289,15 +289,6 @@ fun MenuButton() {
         )
     }
 }
-@Composable
-fun SidebarScreen(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = Modifier
-    ) {
-    }
-}
 
 @Composable
 fun IndexScreen() {
