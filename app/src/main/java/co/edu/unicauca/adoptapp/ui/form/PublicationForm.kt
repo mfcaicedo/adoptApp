@@ -1,7 +1,6 @@
-package co.edu.unicauca.adoptapp.ui.register
+package co.edu.unicauca.adoptapp.ui.form
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,36 +23,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import co.edu.unicauca.adoptapp.R
-import co.edu.unicauca.adoptapp.ui.login.LoginViewModel
+import co.edu.unicauca.adoptapp.ui.register.RegisterViewModel
+
 import kotlinx.coroutines.launch
 
-
-
 @Composable
-fun LoginScreen(viewModel: RegisterViewModel) {
+fun LoginScreen(viewModel: PubliFormViewModel) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Register(Modifier.align(Alignment.Center), viewModel)
+        PublicationForm(Modifier.align(Alignment.Center), viewModel)
     }
 }
 
 
 @Composable
-fun Register(modifier: Modifier, viewModel: RegisterViewModel) {
-    val email: String by viewModel.email.observeAsState(initial = "")
-    val password: String by viewModel.password.observeAsState(initial = "")
+fun PublicationForm(modifier: Modifier, viewModel: PubliFormViewModel) {
     val name: String by viewModel.name.observeAsState(initial = "")
-    val number: String by viewModel.number.observeAsState(initial = "")
-    val address: String by viewModel.address.observeAsState(initial = "")
+    val typeAnimal : String by viewModel.typeAnimal.observeAsState(initial = "")
+    val raza : String by viewModel.raza.observeAsState(initial = "")
+    val description : String by viewModel.description.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
@@ -68,17 +63,21 @@ fun Register(modifier: Modifier, viewModel: RegisterViewModel) {
             Spacer(modifier = Modifier.padding(10.dp))
             HeaderImage(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(10.dp))
-            NameField(name) { viewModel.onLoginChanged(email, password, it, number, address) }
+            NameField(name) { viewModel.onLoginChanged(typeAnimal, raza, description, it) }
             Spacer(modifier = Modifier.padding(10.dp))
-            NumberPhone(number) { viewModel.onLoginChanged(email, password, name, it, address) }
+            TypeField(typeAnimal) { viewModel.onLoginChanged(it, raza, description, name) }
             Spacer(modifier = Modifier.padding(10.dp))
-            Address(address) { viewModel.onLoginChanged(email, password, name, number, it) }
+            RazaField(raza) { viewModel.onLoginChanged(typeAnimal, it, description, name) }
             Spacer(modifier = Modifier.padding(10.dp))
-            EmailField(email) { viewModel.onLoginChanged(it, password, name, number, address) }
+            DescriptionField(description) { viewModel.onLoginChanged(typeAnimal, raza, it, name) }
             Spacer(modifier = Modifier.padding(10.dp))
-            PasswordField(password) { viewModel.onLoginChanged(email, it, name, number, address) }
+            ImageButton {
+                coroutineScope.launch {
+                    viewModel.onLoginSelected()
+                }
+            }
             Spacer(modifier = Modifier.padding(10.dp))
-            RegisterButton(loginEnable) {
+            PublicationButton(loginEnable) {
                 coroutineScope.launch {
                     viewModel.onLoginSelected()
                 }
@@ -91,17 +90,37 @@ fun Register(modifier: Modifier, viewModel: RegisterViewModel) {
 @Composable
 fun LoginScreenPreview() {
     // Crea un LoginViewModel simulado
-    val mockViewModel = object : RegisterViewModel() {
+    val mockViewModel = object : PubliFormViewModel() {
         // Sobrescribe las propiedades y funciones según sea necesario para la vista previa
     }
 
-    // Usa el ViewModel simulado en LoginScreen
+    // Usa el ViewModel simulado
     LoginScreen(mockViewModel)
+}
+
+@Composable
+fun ImageButton(onLoginSelected: () -> Unit){
+    Button(
+        onClick = { onLoginSelected() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color(0xFF16C2D8),
+            //backgroundColor = Color(MaterialTheme.colors.primary),
+            disabledBackgroundColor = Color(0xFF73CBE6),
+            //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
+            contentColor = Color.White,
+            disabledContentColor = Color.White
+        ),
+    ) {
+        Text(text = "Seleccionar Imagen")
+    }
 }
 
 
 @Composable
-fun RegisterButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun PublicationButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
     Button(
         onClick = { onLoginSelected() },
         modifier = Modifier
@@ -116,7 +135,7 @@ fun RegisterButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
             disabledContentColor = Color.White
         ), enabled = loginEnable
     ) {
-        Text(text = "Registrarse")
+        Text(text = "Publicar")
     }
 }
 
@@ -143,11 +162,11 @@ fun NameField(Name: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun NumberPhone(password: String, onTextFieldChanged: (String) -> Unit) {
+fun DescriptionField (description: String, onTextFieldChanged: (String) -> Unit) {
     TextField(
-        value = password, onValueChange = { onTextFieldChanged(it) },
-        placeholder = { Text(text = "Telefono") },
+        value = description, onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(text = "Descripción") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         maxLines = 1,
@@ -161,11 +180,11 @@ fun NumberPhone(password: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun Address(password: String, onTextFieldChanged: (String) -> Unit) {
+fun RazaField(raza: String, onTextFieldChanged: (String) -> Unit) {
     TextField(
-        value = password, onValueChange = { onTextFieldChanged(it) },
-        placeholder = { Text(text = "Direccion") },
+        value = raza, onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(text = "Raza") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         maxLines = 1,
@@ -179,12 +198,12 @@ fun Address(password: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
+fun TypeField(typeAnimal: String, onTextFieldChanged: (String) -> Unit) {
     TextField(
-        value = password, onValueChange = { onTextFieldChanged(it) },
-        placeholder = { Text(text = "Contraseña") },
+        value = typeAnimal, onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        placeholder = { Text(text = "Tipo de animal") },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         maxLines = 1,
         colors = TextFieldDefaults.textFieldColors(
@@ -196,23 +215,8 @@ fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
     )
 }
 
-@Composable
-fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
-    TextField(
-        value = email, onValueChange = { onTextFieldChanged(it) },
-        modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Email") },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        singleLine = true,
-        maxLines = 1,
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = Color(0xFF636262),
-            backgroundColor = Color(0xFFDEDDDD),
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        )
-    )
-}
+
+
 
 
 @Composable
@@ -226,5 +230,9 @@ fun HeaderImage(modifier: Modifier) {
 
 @Composable
 fun Title(modifier: Modifier) {
-
+    Text(
+        text = "AdoptApp",
+        color = Color(0xFF636262),
+        modifier = modifier
+    )
 }
