@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
@@ -55,35 +56,70 @@ import co.edu.unicauca.adoptapp.ui.index.SearchBar
 @Composable
 fun MyTopBar(
     isDarkTheme: Boolean,
+    isMainScreen: Boolean,
     onMenuClick: () -> Unit,
+    onBackClick: () -> Unit,
     onSwitchToggle: (Boolean) -> Unit
+
 ) {
     val colors = MaterialTheme.colorScheme
-
     TopAppBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary),
         navigationIcon = {
-            IconButton(onClick = {
-                onMenuClick()
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = stringResource(R.string.description_menu_icon),
-                    tint = colors.scrim,
-                )
+            if (isMainScreen) {
+                IconButton(onClick = {
+                    onMenuClick()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = stringResource(R.string.description_menu_icon),
+                        tint = colors.scrim,
+                    )
+                }
+            } else {
+                IconButton(onClick = {
+                    onBackClick()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = stringResource(R.string.description_back_icon),
+                        tint = colors.scrim,
+                    )
+                }
             }
         },
         title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                SearchBar(
-                    modifier = Modifier.padding(5.dp)
-                )
+            if (isMainScreen) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    SearchBar(
+                        modifier = Modifier.padding(5.dp)
+                    )
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(
+                        modifier = Modifier
+                    ) {
+                        Text(text = stringResource(R.string.detail_post_text))
+                    }
+                    Column(
+                        modifier = Modifier
+                    ) {
+                        Icon(imageVector = Icons.Default.Favorite, contentDescription = stringResource(
+                            id = R.string.description_favorite_icon
+                        ))
+                    }
+                }
             }
         },
     )

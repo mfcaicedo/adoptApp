@@ -163,7 +163,6 @@ fun CardElement(
                 }
             }
 
-
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.width(455.dp)
@@ -206,9 +205,6 @@ fun ButtonCategories() {
     ) {
         Button(
             onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(
-                primaryLight
-            ),
         ) {
             Text(text = "Todos")
         }
@@ -316,7 +312,7 @@ fun IndexScreen(navigationController: NavController) {
                         text = R.string.image_example_1,
                         drawable = R.drawable.image_example_1,
                         onClick = {
-                            navigationController.navigate(NavigationScreens.DetailPost(postId = i).screen)
+                            navigationController.navigate(NavigationScreens.DetailPost(postId = 1).screen)
                         }
                         )
                     Spacer(modifier = Modifier.height(10.dp))

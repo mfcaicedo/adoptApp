@@ -83,6 +83,7 @@ fun LearnNavDrawer() {
             )
         },
     ) {
+        println("route " + navigationController.currentBackStackEntry?.destination?.route)
         Scaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState)
@@ -90,10 +91,15 @@ fun LearnNavDrawer() {
             topBar = {
                 MyTopBar(
                     isDarkTheme = false,
+                    isMainScreen = navigationController.currentBackStackEntry?.destination?.route == NavigationScreens.Home.screen
+                            ||  navigationController.currentBackStackEntry?.destination?.route == null,
                     onMenuClick = {
                         scope.launch {
                             drawerState.open()
                         }
+                    },
+                    onBackClick = {
+                        navigationController.popBackStack()
                     },
                     onSwitchToggle = { }
                 )
