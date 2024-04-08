@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 
 import kotlin.text.Typography.dagger
 
-open class LoginViewModel : ViewModel() {
+open class InitialViewModel : ViewModel() {
 
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
