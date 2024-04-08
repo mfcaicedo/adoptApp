@@ -42,10 +42,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 
 @Composable
 fun DetailPostScreen(
+    navigationController: NavController,
     postId: Int,
 ) {
     Box(
@@ -170,7 +173,9 @@ fun DetailPostScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navigationController.navigate(NavigationScreens.AdoptPet(userId = 1, postId = 1).screen)
+                    },
                 ) {
                     Text(text = "Adoptar")
                 }

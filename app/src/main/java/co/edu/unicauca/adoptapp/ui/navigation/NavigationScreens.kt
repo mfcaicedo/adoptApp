@@ -3,6 +3,7 @@ package co.edu.unicauca.adoptapp.ui.navigation
 sealed class NavigationScreens (val screen: String) {
     data object Home : NavigationScreens("home")
     data class MyAdoptions(val userId: Int)  : NavigationScreens("my-adoptions/$userId")
+    data class AdoptPet(val userId: Int, val postId: Int) : NavigationScreens("adopt-pet/$userId/$postId")
     data class MyPosts(val userId: Int) : NavigationScreens("my-posts/$userId")
     data class DetailPost(val postId: Int) : NavigationScreens("detail-post/$postId")
     data class Profile(val userId: Int) : NavigationScreens("profile/$userId")

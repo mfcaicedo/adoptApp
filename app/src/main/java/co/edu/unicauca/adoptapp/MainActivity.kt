@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
 import co.edu.unicauca.adoptapp.ui.index.IndexScreen
 import co.edu.unicauca.adoptapp.ui.navigation.MyDrawerContent
@@ -114,11 +115,14 @@ fun LearnNavDrawer() {
                 composable(NavigationScreens.MyAdoptions(1).screen) {
                     AdoptionsScreen()
                 }
+                composable(NavigationScreens.AdoptPet(userId = 1, postId = 1).screen) {
+                    AdoptPetScreen()
+                }
                 composable(NavigationScreens.MyPosts(1).screen) {
                     MyPostsScreen(1)
                 }
                 composable(NavigationScreens.DetailPost(1).screen) {
-                    DetailPostScreen(postId = 1)
+                    DetailPostScreen(postId = 1, navigationController = navigationController)
                 }
                 composable(NavigationScreens.Profile(1).screen) {
                     Box(
