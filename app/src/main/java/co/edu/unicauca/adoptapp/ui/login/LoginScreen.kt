@@ -18,7 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
+import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {
@@ -96,8 +98,9 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF16C2D8),
-            //backgroundColor = Color(MaterialTheme.colors.primary),
+
+            //backgroundColor = Color(0xFF16C2D8),
+            backgroundColor = primaryLight,
             disabledBackgroundColor = Color(0xFF73CBE6),
             //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
@@ -116,8 +119,8 @@ fun InvitadoButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF16C2D8),
-            //backgroundColor = Color(MaterialTheme.colors.primary),
+            //backgroundColor = Color(0xFF16C2D8),
+            backgroundColor = primaryLight,
             disabledBackgroundColor = Color(0xFF73CBE6),
             //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,

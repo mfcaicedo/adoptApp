@@ -55,25 +55,48 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
+        /**
+         * @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+         * @Composable
+         *
+         * Una función componible que crea un cajón de navegación (Navigation Drawer) para la aplicación.
+         * Este cajón de navegación contiene varias pantallas y permite al usuario navegar entre ellas.
+         */
 fun LearnNavDrawer() {
+    // Controlador de navegación para manejar la navegación entre las pantallas.
     val navigationController = rememberNavController()
+
+    // Estado del cajón de navegación. Inicialmente está cerrado.
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+
+    // Estado del Snackbar, que se utiliza para mostrar mensajes breves.
     val snackbarHostState = remember { SnackbarHostState() }
+
+    // Alcance de la corrutina para lanzar corrutinas.
     val scope = rememberCoroutineScope()
+
+    // Contexto de la aplicación.
     val context = LocalContext.current.applicationContext
+
+    // Cajón de navegación modal. Contiene el contenido del cajón y el contenido principal de la aplicación.
     ModalNavigationDrawer(
+        // Proporciona el estado del cajón y si los gestos están habilitados o no.
         drawerState = drawerState,
         gesturesEnabled = drawerState.isOpen || drawerState.isClosed,
         drawerContent = {
+            // Contenido del cajón de navegación.
             MyDrawerContent(
+                // Acción a realizar cuando se selecciona un elemento.
                 onItemSelected = {route ->
+                    // Cierra el cajón y navega a la ruta seleccionada.
                     scope.launch {
                         drawerState.close()
                     }
                     navigationController.navigate(route)
-                    //snackbarHostState.currentSnackbarData?.dismiss() //Cierra ventanas emergentes
                 },
+                // Acción a realizar cuando se presiona el botón de retroceso.
                 onBackPress = {
+                    // Si el cajón está abierto, ciérralo.
                     if (drawerState.isOpen) {
                         scope.launch {
                             drawerState.close()
@@ -83,94 +106,44 @@ fun LearnNavDrawer() {
             )
         },
     ) {
+        // Andamio de la aplicación. Contiene la barra superior y el host Snackbar.
         Scaffold(
+            // Host Snackbar para mostrar mensajes.
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState)
             },
+            // Barra superior de la aplicación.
             topBar = {
                 MyTopBar(
                     isDarkTheme = false,
+                    // Acción a realizar cuando se hace clic en el menú.
                     onMenuClick = {
+                        // Abre el cajón de navegación.
                         scope.launch {
                             drawerState.open()
                         }
                     },
+                    // Acción a realizar cuando se cambia el interruptor.
                     onSwitchToggle = { }
                 )
-
             },
         ) {
+            // Host de navegación para las diferentes pantallas de la aplicación.
             NavHost(navController = navigationController,
-                    startDestination = NavigationScreens.Home.screen) {
-                composable(NavigationScreens.Home.screen) {
-                    IndexScreen(navigationController)
-                }
-                composable(NavigationScreens.MyAdoptions(1).screen) {
-                    AdoptionsScreen()
-                }
-                composable(NavigationScreens.MyPosts(1).screen) {
-                    MyPostsScreen(1)
-                }
-                composable(NavigationScreens.DetailPost(1).screen) {
-                    DetailPostScreen(postId = 1)
-                }
-                composable(NavigationScreens.Profile(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Mi perfil")
-                    }
-                }
-                composable(NavigationScreens.Favorites(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Favoritos")
-                    }
-                }
-                composable(NavigationScreens.Categories(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Categorías")
-                    }
-                }
-                composable(NavigationScreens.MoreServices(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Mas servicios")
-                    }
-                }
-                composable(NavigationScreens.AboutUs(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Sobre nosotros")
-                    }
-                }
-                composable(NavigationScreens.Settings.screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Configuración")
-                    }
-                }
+                startDestination = NavigationScreens.Home.screen) {
+                // Aquí se definen las diferentes pantallas de la aplicación.
+                // Cada pantalla tiene una ruta asociada que se utiliza para la navegación.
             }
         }
 
+        // Efecto lanzado para cerrar el Snackbar después de un retraso.
         LaunchedEffect(snackbarHostState.currentSnackbarData?.visuals?.duration) {
             delay(2000)
             snackbarHostState.currentSnackbarData?.dismiss()
         }
     }
 }
+
 
 
 

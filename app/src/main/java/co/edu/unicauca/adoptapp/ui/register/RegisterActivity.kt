@@ -108,9 +108,9 @@ fun RegisterButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF16C2D8),
+            //backgroundColor = Color(0xFF16C2D8),
             //backgroundColor = Color(MaterialTheme.colors.primary),
-            disabledBackgroundColor = Color(0xFF73CBE6),
+            //disabledBackgroundColor = Color(0xFF73CBE6),
             //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
             disabledContentColor = Color.White

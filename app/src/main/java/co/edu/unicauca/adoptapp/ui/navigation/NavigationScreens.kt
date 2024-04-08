@@ -11,8 +11,9 @@ sealed class NavigationScreens (val screen: String) {
     data class Categories(val userId: Int) : NavigationScreens("categories/$userId")
     data class MoreServices(val userId: Int) : NavigationScreens("more-services/$userId")
     data class AboutUs(val userId: Int) : NavigationScreens("about-us/$userId")
+
+
+
     data object Settings : NavigationScreens("settings")
-
-
 
 }
