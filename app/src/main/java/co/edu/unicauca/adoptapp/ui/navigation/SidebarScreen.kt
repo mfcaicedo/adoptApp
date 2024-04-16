@@ -1,5 +1,6 @@
 package co.edu.unicauca.adoptapp.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
@@ -27,38 +28,164 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
+import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
+import co.edu.unicauca.adoptapp.ui.index.IndexScreen
 import co.edu.unicauca.adoptapp.ui.index.SearchBar
+import co.edu.unicauca.adoptapp.ui.posts.DetailPostScreen
+import co.edu.unicauca.adoptapp.ui.posts.MyPostsScreen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun LearnNavDrawer() {
+    val navigationController = rememberNavController()
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current.applicationContext
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen || drawerState.isClosed,
+        drawerContent = {
+            MyDrawerContent(
+                onItemSelected = {route ->
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    navigationController.navigate(route)
+                    //snackbarHostState.currentSnackbarData?.dismiss() //Cierra ventanas emergentes
+                },
+                onBackPress = {
+                    if (drawerState.isOpen) {
+                        scope.launch {
+                            drawerState.close()
+                        }
+                    }
+                },
+            )
+        },
+    ) {
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
+        ) {
+            NavHost(navController = navigationController,
+                startDestination = NavigationScreens.Home.screen) {
+                composable(NavigationScreens.Home.screen) {
+                    IndexScreen(navigationController, snackbarHostState, context, scope, drawerState)
+                }
+                composable(NavigationScreens.MyAdoptions(1).screen) {
+                    AdoptionsScreen()
+                }
+                composable(NavigationScreens.AdoptPet(userId = 1, postId = 1).screen) {
+                    AdoptPetScreen()
+                }
+                composable(NavigationScreens.MyPosts(1).screen) {
+                    MyPostsScreen(1)
+                }
+                composable(NavigationScreens.DetailPost(1).screen) {
+                    DetailPostScreen(postId = 1, navigationController = navigationController)
+                }
+                composable(NavigationScreens.Profile(1).screen) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Mi perfil")
+                    }
+                }
+                composable(NavigationScreens.Favorites(1).screen) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Favoritos")
+                    }
+                }
+                composable(NavigationScreens.Categories(1).screen) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Categorías")
+                    }
+                }
+                composable(NavigationScreens.MoreServices(1).screen) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Mas servicios")
+                    }
+                }
+                composable(NavigationScreens.AboutUs(1).screen) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Sobre nosotros")
+                    }
+                }
+                composable(NavigationScreens.Settings.screen) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Configuración")
+                    }
+                }
+            }
+        }
+
+        LaunchedEffect(snackbarHostState.currentSnackbarData?.visuals?.duration) {
+            delay(2000)
+            snackbarHostState.currentSnackbarData?.dismiss()
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopBar(
     isDarkTheme: Boolean,
-    isMainScreen: Boolean,
     onMenuClick: () -> Unit,
-    onBackClick: () -> Unit,
     onSwitchToggle: (Boolean) -> Unit
 
 ) {
@@ -68,58 +195,25 @@ fun MyTopBar(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary),
         navigationIcon = {
-            if (isMainScreen) {
-                IconButton(onClick = {
-                    onMenuClick()
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = stringResource(R.string.description_menu_icon),
-                        tint = colors.scrim,
-                    )
-                }
-            } else {
-                IconButton(onClick = {
-                    onBackClick()
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = stringResource(R.string.description_back_icon),
-                        tint = colors.scrim,
-                    )
-                }
+            IconButton(onClick = {
+                onMenuClick()
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = stringResource(R.string.description_menu_icon),
+                    tint = colors.scrim,
+                )
             }
         },
         title = {
-            if (isMainScreen) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    SearchBar(
-                        modifier = Modifier.padding(5.dp)
-                    )
-                }
-            } else {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(
-                        modifier = Modifier
-                    ) {
-                        Text(text = stringResource(R.string.detail_post_text))
-                    }
-                    Column(
-                        modifier = Modifier
-                    ) {
-                        Icon(imageVector = Icons.Default.Favorite, contentDescription = stringResource(
-                            id = R.string.description_favorite_icon
-                        ))
-                    }
-                }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                SearchBar(
+                    modifier = Modifier.padding(5.dp)
+                )
             }
         },
     )

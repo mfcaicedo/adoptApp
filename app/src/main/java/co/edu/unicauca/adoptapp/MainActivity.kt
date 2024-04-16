@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
@@ -29,8 +28,8 @@ import androidx.navigation.compose.rememberNavController
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
 import co.edu.unicauca.adoptapp.ui.index.IndexScreen
+import co.edu.unicauca.adoptapp.ui.navigation.LearnNavDrawer
 import co.edu.unicauca.adoptapp.ui.navigation.MyDrawerContent
-import co.edu.unicauca.adoptapp.ui.navigation.MyTopBar
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostScreen
 import co.edu.unicauca.adoptapp.ui.posts.MyPostsScreen
@@ -54,133 +53,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun LearnNavDrawer() {
-    val navigationController = rememberNavController()
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current.applicationContext
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        gesturesEnabled = drawerState.isOpen || drawerState.isClosed,
-        drawerContent = {
-            MyDrawerContent(
-                onItemSelected = {route ->
-                    scope.launch {
-                        drawerState.close()
-                    }
-                    navigationController.navigate(route)
-                    //snackbarHostState.currentSnackbarData?.dismiss() //Cierra ventanas emergentes
-                },
-                onBackPress = {
-                    if (drawerState.isOpen) {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    }
-                },
-            )
-        },
-    ) {
-        println("route " + navigationController.currentBackStackEntry?.destination?.route)
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
-            },
-            topBar = {
-                MyTopBar(
-                    isDarkTheme = false,
-                    isMainScreen = navigationController.currentBackStackEntry?.destination?.route == NavigationScreens.Home.screen
-                            ||  navigationController.currentBackStackEntry?.destination?.route == null,
-                    onMenuClick = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    },
-                    onBackClick = {
-                        navigationController.popBackStack()
-                    },
-                    onSwitchToggle = { }
-                )
-
-            },
-        ) {
-            NavHost(navController = navigationController,
-                    startDestination = NavigationScreens.Home.screen) {
-                composable(NavigationScreens.Home.screen) {
-                    IndexScreen(navigationController)
-                }
-                composable(NavigationScreens.MyAdoptions(1).screen) {
-                    AdoptionsScreen()
-                }
-                composable(NavigationScreens.AdoptPet(userId = 1, postId = 1).screen) {
-                    AdoptPetScreen()
-                }
-                composable(NavigationScreens.MyPosts(1).screen) {
-                    MyPostsScreen(1)
-                }
-                composable(NavigationScreens.DetailPost(1).screen) {
-                    DetailPostScreen(postId = 1, navigationController = navigationController)
-                }
-                composable(NavigationScreens.Profile(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Mi perfil")
-                    }
-                }
-                composable(NavigationScreens.Favorites(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Favoritos")
-                    }
-                }
-                composable(NavigationScreens.Categories(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Categorías")
-                    }
-                }
-                composable(NavigationScreens.MoreServices(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Mas servicios")
-                    }
-                }
-                composable(NavigationScreens.AboutUs(1).screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Sobre nosotros")
-                    }
-                }
-                composable(NavigationScreens.Settings.screen) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Configuración")
-                    }
-                }
-            }
-        }
-
-        LaunchedEffect(snackbarHostState.currentSnackbarData?.visuals?.duration) {
-            delay(2000)
-            snackbarHostState.currentSnackbarData?.dismiss()
-        }
-    }
-}
 
 
 
