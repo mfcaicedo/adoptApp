@@ -331,7 +331,7 @@ fun IndexContent(navigationController: NavController){
                         text = R.string.image_example_1,
                         drawable = R.drawable.image_example_1,
                         onClick = {
-                            navigationController.navigate(NavigationScreens.DetailPost(postId = 1).screen)
+                            navigationController.navigate(NavigationScreens.DetailPost.passId(i.toString()))
                         }
                     )
                     Spacer(modifier = Modifier.height(10.dp))

@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
@@ -115,13 +114,15 @@ fun LearnNavDrawer() {
                     AdoptionsScreen()
                 }
                 composable(NavigationScreens.AdoptPet(userId = 1, postId = 1).screen) {
-                    AdoptPetScreen()
+                        backStackEntry ->
+                    AdoptPetScreen(navigationController = navigationController, backStackEntry.arguments?.getString("userId"))
                 }
                 composable(NavigationScreens.MyPosts(1).screen) {
                     MyPostsScreen(1)
+
                 }
-                composable(NavigationScreens.DetailPost(1).screen) {
-                    DetailPostScreen(postId = 1, navigationController = navigationController)
+                composable(NavigationScreens.DetailPost.screen) { backStackEntry ->
+                    DetailPostScreen(navigationController = navigationController, postId = backStackEntry.arguments?.getString("postId"))
                 }
                 composable(NavigationScreens.Profile(1).screen) {
                     Box(

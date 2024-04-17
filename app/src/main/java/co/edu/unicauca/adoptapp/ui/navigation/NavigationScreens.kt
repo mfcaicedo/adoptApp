@@ -5,7 +5,11 @@ sealed class NavigationScreens (val screen: String) {
     data class MyAdoptions(val userId: Int)  : NavigationScreens("my-adoptions/$userId")
     data class AdoptPet(val userId: Int, val postId: Int) : NavigationScreens("adopt-pet/$userId/$postId")
     data class MyPosts(val userId: Int) : NavigationScreens("my-posts/$userId")
-    data class DetailPost(val postId: Int) : NavigationScreens("detail-post/$postId")
+    data object DetailPost: NavigationScreens("detail-post/{postId}") {
+        fun passId(id: String): String {
+            return this.screen.replace(oldValue = "{postId}", newValue = id)
+        }
+    }
     data class Profile(val userId: Int) : NavigationScreens("profile/$userId")
     data class EditProfile(val userId: Int) : NavigationScreens("edit-profile/$userId")
     data class Favorites(val userId: Int) : NavigationScreens("favorites/$userId")

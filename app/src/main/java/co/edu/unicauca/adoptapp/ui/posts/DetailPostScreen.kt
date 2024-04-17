@@ -59,14 +59,15 @@ import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 @Composable
 fun DetailPostScreen(
     navigationController: NavController,
-    postId: Int,
+    postId: String?,
 ) {
+   println("que pasa $postId")
     Scaffold(
         topBar = {
             DetailPostTopBar(navigationController = navigationController)
         },
     ) {
-        DetailPostContent(navigationController = navigationController)
+        DetailPostContent(navigationController = navigationController, postId = postId)
     }
 }
 
@@ -112,7 +113,7 @@ fun DetailPostTopBar(navigationController: NavController) {
 }
 
 @Composable
-fun DetailPostContent(navigationController: NavController) {
+fun DetailPostContent(navigationController: NavController, postId: String?) {
     Box(
         Modifier
             .fillMaxSize()
