@@ -92,7 +92,6 @@ fun InitialButton(navigationController: NavController, onClick: () -> Unit) {
     Button(
         onClick = {
             navigationController.navigate(NavigationScreens.Login.screen)
-
         },
         modifier = Modifier
             .fillMaxWidth()
