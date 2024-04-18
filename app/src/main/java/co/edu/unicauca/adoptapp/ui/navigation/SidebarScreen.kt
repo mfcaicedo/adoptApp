@@ -202,7 +202,6 @@ fun MyTopBar(
                 Icon(
                     imageVector = Icons.Default.Menu,
                     contentDescription = stringResource(R.string.description_menu_icon),
-                    tint = colors.scrim,
                 )
             }
         },
@@ -305,7 +304,6 @@ fun MyDrawerContent(
                             Icon(
                                 imageVector = menuList.icon,
                                 contentDescription = menuList.title,
-                                tint = MaterialTheme.colorScheme.scrim,
                             )
                         },
                         onClick = {

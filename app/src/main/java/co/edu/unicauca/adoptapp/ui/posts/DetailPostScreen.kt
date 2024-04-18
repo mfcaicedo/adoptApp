@@ -36,6 +36,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -85,7 +86,6 @@ fun DetailPostTopBar(navigationController: NavController) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = stringResource(R.string.description_back_icon),
-                    tint = MaterialTheme.colorScheme.scrim,
                 )
             }
         },
@@ -103,9 +103,11 @@ fun DetailPostTopBar(navigationController: NavController) {
                 Column(
                     modifier = Modifier
                 ) {
-                    Icon(imageVector = Icons.Default.Favorite, contentDescription = stringResource(
-                        id = R.string.description_favorite_icon
-                    ))
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Default.Favorite, contentDescription = stringResource(
+                            id = R.string.description_favorite_icon
+                        ))
+                    }
                 }
             }
         },
@@ -115,20 +117,20 @@ fun DetailPostTopBar(navigationController: NavController) {
 @Composable
 fun DetailPostContent(navigationController: NavController, postId: String?) {
     Box(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 14.dp)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
+            .background(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.TopCenter,
-
         ){
         Column (
+            modifier = Modifier
+                .padding(start = 9.dp, end = 9.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Row (
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .fillMaxWidth(),
             ){
                 Image(
                     painter = painterResource(id = R.drawable.image_example_1),
