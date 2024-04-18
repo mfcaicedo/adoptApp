@@ -1,14 +1,17 @@
 package co.edu.unicauca.adoptapp.ui.theme
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF36618E)
+val primaryLight = Color(0xFF0099FF)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFD2E4FF)
 val onPrimaryContainerLight = Color(0xFF001D36)
-val secondaryLight = Color(0xFF2C6A45)
+
+val secondaryLight = Color(0xFF00FF99)
 val onSecondaryLight = Color(0xFFFFFFFF)
 val secondaryContainerLight = Color(0xFFB0F1C3)
 val onSecondaryContainerLight = Color(0xFF00210F)
+
+
 val tertiaryLight = Color(0xFF006876)
 val onTertiaryLight = Color(0xFFFFFFFF)
 val tertiaryContainerLight = Color(0xFF9FEFFF)

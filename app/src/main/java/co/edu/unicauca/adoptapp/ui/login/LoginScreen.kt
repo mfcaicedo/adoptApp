@@ -19,7 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
+import co.edu.unicauca.adoptapp.ui.theme.primaryDark
 import co.edu.unicauca.adoptapp.ui.theme.primaryLight
+import co.edu.unicauca.adoptapp.ui.theme.secondaryLight
 import kotlinx.coroutines.launch
 
 @Composable
@@ -98,7 +100,8 @@ fun LoginButton(navigationController: NavController, loginEnable: Boolean, onLog
         colors = ButtonDefaults.buttonColors(
             //backgroundColor = Color(0xFF16C2D8),
             backgroundColor = primaryLight,
-            disabledBackgroundColor = Color(0xFF73CBE6),
+            //disabledBackgroundColor = Color(0xFF73CBE6),
+            disabledBackgroundColor = primaryDark,
             //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
             disabledContentColor = Color.White
