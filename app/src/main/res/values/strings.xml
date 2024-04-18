@@ -13,4 +13,7 @@
     <string name="item_about_us">Acerca de nosotros</string>
     <string name="item_settings">Configuración</string>
     <string name="description_menu_icon">Menú AdoptApp</string>
+    <string name="description_back_icon">Ir atrás</string>
+    <string name="description_favorite_icon">Favoritos</string>
+    <string name="detail_post_text">Detalle</string>
 </resources>

@@ -167,7 +167,6 @@ fun Options(modifier: Modifier) {
     )
 }
 
-
 @Composable
 fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
     TextField(
