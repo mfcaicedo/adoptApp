@@ -115,7 +115,7 @@ fun LearnNavDrawer() {
                 }
                 composable(NavigationScreens.AdoptPet(userId = 1, postId = 1).screen) {
                         backStackEntry ->
-                    AdoptPetScreen(navigationController = navigationController, backStackEntry.arguments?.getString("userId"))
+                    AdoptPetScreen(navigationController = navigationController, postId = backStackEntry.arguments?.getString("postId"))
                 }
                 composable(NavigationScreens.MyPosts(1).screen) {
                     MyPostsScreen(1)

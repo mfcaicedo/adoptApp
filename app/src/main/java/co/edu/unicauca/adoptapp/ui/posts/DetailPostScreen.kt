@@ -53,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetContent
 import co.edu.unicauca.adoptapp.ui.index.SearchBar
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 
@@ -62,13 +63,14 @@ fun DetailPostScreen(
     navigationController: NavController,
     postId: String?,
 ) {
-   println("que pasa $postId")
     Scaffold(
         topBar = {
             DetailPostTopBar(navigationController = navigationController)
         },
     ) {
-        DetailPostContent(navigationController = navigationController, postId = postId)
+        Box(modifier = Modifier.padding(it)) {
+            DetailPostContent(navigationController = navigationController, postId = postId)
+        }
     }
 }
 
@@ -118,6 +120,7 @@ fun DetailPostTopBar(navigationController: NavController) {
 fun DetailPostContent(navigationController: NavController, postId: String?) {
     Box(
         modifier = Modifier
+            .padding(top = 8.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .background(MaterialTheme.colorScheme.surfaceVariant),

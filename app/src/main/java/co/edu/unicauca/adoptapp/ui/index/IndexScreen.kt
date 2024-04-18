@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -303,10 +304,11 @@ fun IndexScreen(
                 },
                 onSwitchToggle = { }
             )
-
         },
     ) {
-        IndexContent(navigationController)
+        Box(modifier = Modifier.padding(it)) {
+            IndexContent(navigationController)
+        }
     }
 }
 

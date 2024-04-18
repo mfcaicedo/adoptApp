@@ -17,4 +17,6 @@
     <string name="description_back_icon">Ir atrás</string>
     <string name="description_favorite_icon">Favoritos</string>
     <string name="detail_post_text">Detalle</string>
+    <string name="adopt_pet_text">Adoptar</string>
+    <string name="adoption_conditions_text">Condiciones de Adopción</string>
 </resources>
