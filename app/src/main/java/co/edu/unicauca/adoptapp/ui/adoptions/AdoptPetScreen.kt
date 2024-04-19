@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +26,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -37,7 +40,7 @@ import co.edu.unicauca.adoptapp.ui.index.IndexContent
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostContent
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostTopBar
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AdoptPetScreen(navigationController: NavController, postId: String?) {
     Scaffold(
@@ -108,7 +111,9 @@ fun AdoptPetContent(navigationController: NavController) {
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .padding(start = 9.dp, end = 9.dp, top = 9.dp)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -117,27 +122,81 @@ fun AdoptPetContent(navigationController: NavController) {
             ) {
                 Text(
                     text = stringResource(id = R.string.adoption_conditions_text),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
-            Row {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
                 Text(
-                    text = stringResource(id = R.string.adoption_conditions_text),
+                    text = stringResource(id = R.string.adoption_conditions_description_text),
+                    style = MaterialTheme.typography.bodyMedium
                 )
-                Text(
-                    text = stringResource(id = R.string.adoption_conditions_text),
+            }
+            for (condition in conditions) {
+                val conditionText = condition["conditionText"] as String
+                val checked = condition["checked"] as Boolean
+                ConditionAdoptPet(
+                    conditionText = conditionText,
+                    checked = checked
                 )
-                Text(
-                    text = stringResource(id = R.string.adoption_conditions_text),
-                )
-                Text(
-                    text = stringResource(id = R.string.adoption_conditions_text),
-                )
-                Text(
-                        text = stringResource(id = R.string.adoption_conditions_text),
-                )
+            }
 
-            }
         }
     }
 }
+
+@Composable
+fun ConditionAdoptPet(
+    conditionText: String,
+    checked: Boolean = false
+) {
+    Row (
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        CheckBox(checked = checked)
+        Text(
+            text = conditionText,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+@Composable
+fun CheckBox(
+    checked: Boolean = false,
+) {
+    val checkedState = remember { mutableStateOf(checked) }
+    Checkbox(
+        checked = checkedState.value,
+        onCheckedChange = { checkedState.value = it }
+    )
+}
+
+//Llegaría por base de datos
+val conditions = listOf(
+    mapOf(
+        "conditionText" to "Sacarlo a pasear al menos 3 veces a la semana",
+        "checked" to false
+    ),
+    mapOf(
+        "conditionText" to "Darle de comer 3 veces al día",
+        "checked" to false
+    ),
+    mapOf(
+        "conditionText" to "Darle agua fresca y limpia",
+        "checked" to false
+    ),
+    mapOf(
+        "conditionText" to "Jugar con él al menos 1 hora al día",
+        "checked" to false
+    ),
+    mapOf(
+        "conditionText" to "Llevarlo al veterinario al menos 1 vez al año",
+        "checked" to false
+    )
+)

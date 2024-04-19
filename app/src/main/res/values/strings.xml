@@ -18,4 +18,5 @@
     <string name="detail_post_text">Detalle</string>
     <string name="adopt_pet_text">Adoptar</string>
     <string name="adoption_conditions_text">Condiciones de adopción</string>
+    <string name="adoption_conditions_description_text">A continuación, debes marcar las condiciones con las cuales puedas cumplir.</string>
 </resources>
