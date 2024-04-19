@@ -1,7 +1,6 @@
 package co.edu.unicauca.adoptapp.ui.initial
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,14 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,29 +20,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
-import co.edu.unicauca.adoptapp.ui.login.LoginViewModel
+import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
+
+import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 import kotlinx.coroutines.launch
 
 @Composable
-fun InitialActivity(viewModel: LoginViewModel) {
+fun InitialActivity(viewModel: InitialViewModel,navigationController: NavController) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Login(Modifier.align(Alignment.Center), viewModel)
+        Initial(Modifier.align(Alignment.Center), viewModel, navigationController)
     }
 }
 
 
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel) {
+fun Initial(modifier: Modifier, viewModel: InitialViewModel, navigationController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
@@ -65,13 +60,12 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
             Spacer(modifier = Modifier.padding(14.dp))
             HeaderImage(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(16.dp))
-
             Spacer(modifier = Modifier.padding(4.dp))
 
             Spacer(modifier = Modifier.padding(8.dp))
 
             Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(loginEnable) {
+            InitialButton(navigationController) {
                 coroutineScope.launch {
                     viewModel.onLoginSelected()
                 }
@@ -84,30 +78,29 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
 @Composable
 fun LoginScreenPreview() {
     // Crea un LoginViewModel simulado
-    val mockViewModel = object : LoginViewModel() {
+    val mockViewModel = object : InitialViewModel() {
         // Sobrescribe las propiedades y funciones según sea necesario para la vista previa
     }
 
     // Usa el ViewModel simulado en LoginScreen
-    InitialActivity(mockViewModel)
+    //InitialActivity(mockViewModel,NavController())
 }
 
 
 @Composable
-fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun InitialButton(navigationController: NavController, onClick: () -> Unit) {
     Button(
-        onClick = { onLoginSelected() },
+        onClick = {
+            navigationController.navigate(NavigationScreens.Login.screen)
+        },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF16C2D8),
-            //backgroundColor = Color(MaterialTheme.colors.primary),
-            disabledBackgroundColor = Color(0xFF73CBE6),
-            //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
+            primaryLight,
             contentColor = Color.White,
             disabledContentColor = Color.White
-        ), enabled = loginEnable
+        ),
     ) {
         Text(text = "Continuar")
     }

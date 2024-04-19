@@ -63,10 +63,18 @@ import androidx.navigation.compose.rememberNavController
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
+import co.edu.unicauca.adoptapp.ui.form.PubliFormViewModel
+import co.edu.unicauca.adoptapp.ui.form.PublicationForm
 import co.edu.unicauca.adoptapp.ui.index.IndexScreen
 import co.edu.unicauca.adoptapp.ui.index.SearchBar
+import co.edu.unicauca.adoptapp.ui.initial.InitialActivity
+import co.edu.unicauca.adoptapp.ui.initial.InitialViewModel
+import co.edu.unicauca.adoptapp.ui.login.LoginScreen
+import co.edu.unicauca.adoptapp.ui.login.LoginViewModel
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostScreen
 import co.edu.unicauca.adoptapp.ui.posts.MyPostsScreen
+import co.edu.unicauca.adoptapp.ui.register.RegisterActivity
+import co.edu.unicauca.adoptapp.ui.register.RegisterViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -106,13 +114,32 @@ fun LearnNavDrawer() {
             },
         ) {
             NavHost(navController = navigationController,
-                startDestination = NavigationScreens.Home.screen) {
+
+                startDestination = NavigationScreens.Initial.screen) {
+
+                composable(NavigationScreens.Initial.screen) {
+                    InitialActivity(InitialViewModel(),navigationController)
+                }
+
+                composable(NavigationScreens.Register.screen) {
+                    RegisterActivity(RegisterViewModel())
+                }
+
+                composable(NavigationScreens.Publications.screen) {
+                    PublicationForm(PubliFormViewModel())
+                }
+
+                composable(NavigationScreens.Login.screen) {
+                    LoginScreen(LoginViewModel(),navigationController)
+                }
+
                 composable(NavigationScreens.Home.screen) {
                     IndexScreen(navigationController, snackbarHostState, context, scope, drawerState)
                 }
                 composable(NavigationScreens.MyAdoptions(1).screen) {
                     AdoptionsScreen()
                 }
+
                 composable(NavigationScreens.AdoptPet(userId = 1, postId = 1).screen) {
                         backStackEntry ->
                     AdoptPetScreen(navigationController = navigationController, postId = backStackEntry.arguments?.getString("postId"))

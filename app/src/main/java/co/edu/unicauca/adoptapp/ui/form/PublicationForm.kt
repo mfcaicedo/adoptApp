@@ -32,7 +32,7 @@ import co.edu.unicauca.adoptapp.ui.register.RegisterViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(viewModel: PubliFormViewModel) {
+fun PublicationForm(viewModel: PubliFormViewModel) {
     Box(
         Modifier
             .fillMaxSize()
@@ -95,7 +95,7 @@ fun LoginScreenPreview() {
     }
 
     // Usa el ViewModel simulado
-    LoginScreen(mockViewModel)
+    PublicationForm(mockViewModel)
 }
 
 @Composable

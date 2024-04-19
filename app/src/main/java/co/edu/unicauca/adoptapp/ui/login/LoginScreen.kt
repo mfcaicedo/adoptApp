@@ -16,28 +16,30 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
-import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
+import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
+import co.edu.unicauca.adoptapp.ui.theme.primaryDark
+import co.edu.unicauca.adoptapp.ui.theme.primaryLight
+import co.edu.unicauca.adoptapp.ui.theme.secondaryLight
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun LoginScreen(viewModel: LoginViewModel,navigationController: NavController) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Login(Modifier.align(Alignment.Center), viewModel)
+        Login(Modifier.align(Alignment.Center), viewModel,navigationController)
     }
 }
 
-
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel) {
+fun Login(modifier: Modifier, viewModel: LoginViewModel, navigationController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
-
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
@@ -58,7 +60,7 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
             Spacer(modifier = Modifier.padding(8.dp))
             ForgotPassword(Modifier.align(Alignment.End))
             Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(loginEnable) {
+            LoginButton(navigationController,loginEnable) {
                 coroutineScope.launch {
                     viewModel.onLoginSelected()
                 }
@@ -66,11 +68,13 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
             Spacer(modifier = Modifier.padding(10.dp))
             Options(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(10.dp))
-            InvitadoButton(loginEnable) {
+            InvitadoButton(navigationController) {
                 coroutineScope.launch {
                     viewModel.onLoginSelected()
                 }
             }
+            Spacer(modifier = Modifier.padding(10.dp))
+            RegisterText(navigationController,Modifier.align(Alignment.CenterHorizontally))
         }
     }
 }
@@ -82,23 +86,22 @@ fun LoginScreenPreview() {
     val mockViewModel = object : LoginViewModel() {
         // Sobrescribe las propiedades y funciones según sea necesario para la vista previa
     }
-
-    // Usa el ViewModel simulado en LoginScreen
-    LoginScreen(mockViewModel)
+    //Usa el ViewModel simulado en LoginScreen
+    //LoginScreen(mockViewModel)
 }
 
-
 @Composable
-fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun LoginButton(navigationController: NavController, loginEnable: Boolean, onLoginSelected: () -> Unit) {
     Button(
-        onClick = { onLoginSelected() },
+        onClick = { navigationController.navigate(NavigationScreens.Home.screen) },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF16C2D8),
-            //backgroundColor = Color(MaterialTheme.colors.primary),
-            disabledBackgroundColor = Color(0xFF73CBE6),
+            //backgroundColor = Color(0xFF16C2D8),
+            backgroundColor = primaryLight,
+            //disabledBackgroundColor = Color(0xFF73CBE6),
+            disabledBackgroundColor = primaryDark,
             //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
             disabledContentColor = Color.White
@@ -109,20 +112,21 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
 }
 
 @Composable
-fun InvitadoButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun InvitadoButton (navigationController: NavController, onClick: () -> Unit) {
     Button(
-        onClick = { onLoginSelected() },
+        onClick = { navigationController.navigate(NavigationScreens.Home.screen) },
+
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF16C2D8),
-            //backgroundColor = Color(MaterialTheme.colors.primary),
-            disabledBackgroundColor = Color(0xFF73CBE6),
+            //backgroundColor = Color(0xFF16C2D8),
+            backgroundColor = primaryLight,
+            //disabledBackgroundColor = Color(0xFF73CBE6),
             //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
             disabledContentColor = Color.White
-        ), enabled = loginEnable
+        ),
     ) {
         Text(text = "Invitado")
     }
@@ -137,6 +141,18 @@ fun ForgotPassword(modifier: Modifier) {
     Text(
         text = "Olvidaste la contraseña?",
         modifier = modifier.clickable { },
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color(0xFF83CBE1)
+
+    )
+}
+
+@Composable
+fun RegisterText(navigationController: NavController, modifier: Modifier) {
+    Text(
+        text = "Registrarse",
+        modifier = modifier.clickable { navigationController.navigate(NavigationScreens.Register.screen) },
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = Color(0xFF83CBE1)
