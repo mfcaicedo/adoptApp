@@ -1,4 +1,4 @@
-package co.edu.unicauca.adoptapp.ui.form
+package co.edu.unicauca.adoptapp.ui.register_user
 
 import android.util.Patterns
 import androidx.lifecycle.LiveData

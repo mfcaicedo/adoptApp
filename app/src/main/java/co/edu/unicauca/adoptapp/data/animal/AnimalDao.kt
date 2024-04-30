@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 interface AnimalDao {
 
 
-    @Query("SELECT * from animals ORDER BY name ASC")
+    @Query("SELECT * from animal ORDER BY name ASC")
     fun getAllAnimals(): Flow<List<Animal>>
 
-    @Query("SELECT * from animals WHERE id = :id")
+    @Query("SELECT * from animal WHERE animalId = :id")
     fun getAnimal(id: Int): Flow<Animal>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -26,3 +26,4 @@ interface AnimalDao {
     @Delete
     suspend fun delete(animal: Animal)
 }
+

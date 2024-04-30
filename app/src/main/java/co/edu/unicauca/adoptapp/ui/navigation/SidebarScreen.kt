@@ -63,8 +63,8 @@ import androidx.navigation.compose.rememberNavController
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
-import co.edu.unicauca.adoptapp.ui.form.PubliFormViewModel
-import co.edu.unicauca.adoptapp.ui.form.PublicationForm
+import co.edu.unicauca.adoptapp.ui.register_user.PubliFormViewModel
+import co.edu.unicauca.adoptapp.ui.register_user.PublicationForm
 import co.edu.unicauca.adoptapp.ui.index.IndexScreen
 import co.edu.unicauca.adoptapp.ui.index.SearchBar
 import co.edu.unicauca.adoptapp.ui.initial.InitialActivity

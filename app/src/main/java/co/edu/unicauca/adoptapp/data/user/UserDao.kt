@@ -1,4 +1,4 @@
-package co.edu.unicauca.adoptapp.data.usuario
+package co.edu.unicauca.adoptapp.data.user
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
 
-    @Query("SELECT * from users ORDER BY name ASC")
+    @Query("SELECT * from user ORDER BY name ASC")
     fun getAllUsers(): Flow<List<User>>
 
-    @Query("SELECT * from users WHERE id = :id")
+    @Query("SELECT * from user WHERE userId = :id")
     fun getUser(id: Int): Flow<User>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

@@ -1,4 +1,4 @@
-package co.edu.unicauca.adoptapp.ui.form
+package co.edu.unicauca.adoptapp.ui.register_user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -27,7 +27,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import co.edu.unicauca.adoptapp.R
-import co.edu.unicauca.adoptapp.ui.register.RegisterViewModel
 
 import kotlinx.coroutines.launch
 

@@ -1,4 +1,4 @@
-package co.edu.unicauca.adoptapp.data.usuario
+package co.edu.unicauca.adoptapp.data.user
 
 import kotlinx.coroutines.flow.Flow
 
