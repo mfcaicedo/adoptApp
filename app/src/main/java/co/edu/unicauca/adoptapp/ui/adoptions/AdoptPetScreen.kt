@@ -40,7 +40,6 @@ import co.edu.unicauca.adoptapp.ui.index.IndexContent
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostContent
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostTopBar
 
-//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AdoptPetScreen(navigationController: NavController, postId: String?) {
     Scaffold(
