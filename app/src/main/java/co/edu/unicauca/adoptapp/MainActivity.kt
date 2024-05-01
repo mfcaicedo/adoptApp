@@ -21,21 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
-import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
-import co.edu.unicauca.adoptapp.ui.index.IndexScreen
+
 import co.edu.unicauca.adoptapp.ui.navigation.LearnNavDrawer
-import co.edu.unicauca.adoptapp.ui.navigation.MyDrawerContent
-import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
-import co.edu.unicauca.adoptapp.ui.posts.DetailPostScreen
-import co.edu.unicauca.adoptapp.ui.posts.MyPostsScreen
+
 import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
