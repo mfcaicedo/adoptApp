@@ -61,10 +61,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.data.user.UserRepository
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
-import co.edu.unicauca.adoptapp.ui.register_user.PubliFormViewModel
-import co.edu.unicauca.adoptapp.ui.register_user.PublicationForm
+import co.edu.unicauca.adoptapp.ui.publications.PubliFormViewModel
+import co.edu.unicauca.adoptapp.ui.publications.PublicationForm
 import co.edu.unicauca.adoptapp.ui.index.IndexScreen
 import co.edu.unicauca.adoptapp.ui.index.SearchBar
 import co.edu.unicauca.adoptapp.ui.initial.InitialActivity
@@ -73,8 +74,10 @@ import co.edu.unicauca.adoptapp.ui.login.LoginScreen
 import co.edu.unicauca.adoptapp.ui.login.LoginViewModel
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostScreen
 import co.edu.unicauca.adoptapp.ui.posts.MyPostsScreen
-import co.edu.unicauca.adoptapp.ui.register.RegisterActivity
-import co.edu.unicauca.adoptapp.ui.register.RegisterViewModel
+import co.edu.unicauca.adoptapp.ui.register_user.RegisterActivity
+import co.edu.unicauca.adoptapp.ui.register_user.RegisterViewModel
+import co.edu.unicauca.adoptapp.ui.register_user.UserEntryViewModel
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -86,6 +89,7 @@ fun LearnNavDrawer() {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current.applicationContext
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = drawerState.isOpen || drawerState.isClosed,
@@ -122,7 +126,7 @@ fun LearnNavDrawer() {
                 }
 
                 composable(NavigationScreens.Register.screen) {
-                    RegisterActivity(RegisterViewModel())
+                    RegisterActivity(UserEntryViewModel())
                 }
 
                 composable(NavigationScreens.Publications.screen) {

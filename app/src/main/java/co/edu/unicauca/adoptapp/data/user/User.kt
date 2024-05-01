@@ -11,6 +11,4 @@ data class User (
     val password: String,
     val phone: String,
     val address: String,
-    val city: String,
-
 )
