@@ -28,8 +28,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    state: UserState,
-    onEvent: (UserRegisterEvent) -> Unit,
+    state: LoginState,
+    onEvent: (LoginEvent) -> Unit,
     navigationController: NavController
 ) {
     Box(
@@ -37,58 +37,60 @@ fun LoginScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Login(Modifier.align(Alignment.Center),navigationController)
+        Login(Modifier.align(Alignment.Center),state, onEvent,navigationController)
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, navigationController: NavController) {
+fun Login(modifier: Modifier, state: LoginState,
+          onEvent: (LoginEvent) -> Unit,
+          navigationController: NavController) {
 
-    val email: String by viewModel.email.observeAsState(initial = "")
-    val password: String by viewModel.password.observeAsState(initial = "")
-    val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
-    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
-    val loginSuccess: Boolean by viewModel.loginSuccess.observeAsState(initial = false)
-    val coroutineScope = rememberCoroutineScope()
+    //val coroutineScope = rememberCoroutineScope()
 
-    if (isLoading) {
-        Box(Modifier.fillMaxSize()) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
-        }
-    } else {
+    //if (isLoading) {
+      //  Box(Modifier.fillMaxSize()) {
+        //    CircularProgressIndicator(Modifier.align(Alignment.Center))
+        //}
+    //} else {
         Column(modifier = modifier) {
             Title(modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(14.dp))
             HeaderImage(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(16.dp))
-            EmailField(email) { viewModel.onLoginChanged(it, password) }
+            EmailField(state, onEvent)
             Spacer(modifier = Modifier.padding(4.dp))
-            PasswordField(password) { viewModel.onLoginChanged(email, it) }
+            PasswordField(state, onEvent)
             Spacer(modifier = Modifier.padding(8.dp))
             ForgotPassword(Modifier.align(Alignment.End))
             Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(navigationController,loginEnable) {
-                coroutineScope.launch {
-                    viewModel.onLoginSelected()
-                    if (loginSuccess) navigationController.navigate(NavigationScreens.Home.screen)
-                }
+            //LoginButton(navigationController,loginEnable) {
+            LoginButton(true) {
+
+                //coroutineScope.launch {
+                //    viewModel.onLoginSelected()
+                //    if (loginSuccess) navigationController.navigate(NavigationScreens.Home.screen)
+                //}
+                onEvent(LoginEvent.Login)
+                navigationController.navigate(NavigationScreens.Home.screen)
+
             }
             Spacer(modifier = Modifier.padding(10.dp))
             Options(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(10.dp))
             InvitadoButton(navigationController) {
-                coroutineScope.launch {
-                    viewModel.onLoginSelected()
-                }
+                //coroutineScope.launch {
+                //    viewModel.onLoginSelected()
+                //}
             }
             Spacer(modifier = Modifier.padding(10.dp))
             RegisterText(navigationController,Modifier.align(Alignment.CenterHorizontally))
         }
-    }
+    //}
 }
 
 @Composable
-fun LoginButton(navigationController: NavController, loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
     Button(
         onClick = {
             onLoginSelected()
@@ -111,7 +113,9 @@ fun LoginButton(navigationController: NavController, loginEnable: Boolean, onLog
 @Composable
 fun InvitadoButton (navigationController: NavController, onClick: () -> Unit) {
     Button(
-        onClick = { navigationController.navigate(NavigationScreens.Home.screen) },
+        onClick = {
+
+            navigationController.navigate(NavigationScreens.Home.screen) },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
@@ -160,9 +164,9 @@ fun Options(modifier: Modifier) {
 }
 
 @Composable
-fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
+fun PasswordField(state: LoginState, onEvent: (LoginEvent) -> Unit) {
     TextField(
-        value = password, onValueChange = { onTextFieldChanged(it) },
+        value = state.password, onValueChange = { onEvent(LoginEvent.SetPassword(it)) },
         placeholder = { Text(text = "Contraseña") },
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -178,9 +182,9 @@ fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
+fun EmailField(state: LoginState, onEvent: (LoginEvent) -> Unit) {
     TextField(
-        value = email, onValueChange = { onTextFieldChanged(it) },
+        value = state.email, onValueChange = { onEvent(LoginEvent.SetEmail(it)) },
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(text = "Email") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),

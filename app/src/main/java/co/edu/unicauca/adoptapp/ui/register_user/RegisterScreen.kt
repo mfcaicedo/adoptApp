@@ -66,6 +66,7 @@ fun Register(
             PasswordField(state, onEvent)
             Spacer(modifier = Modifier.padding(10.dp))
             RegisterButton(true) {
+
                 onEvent(UserRegisterEvent.Register)
                 //Mostrar mensaje de registro exitoso
                 //TODO: falta implementar

@@ -40,7 +40,8 @@ class LoginViewModel(private val dao: UserDao) : ViewModel() {
     suspend fun onLoginSelected() {
         _isLoading.value = true
         viewModelScope.launch {
-          val user = dao.getUserByEmailAndPassword(email.value!!, password.value!!)
+
+            val user = dao.getUserByEmailAndPassword(email.value!!, password.value!!)
             if (user != null) {
                 _loginSuccess.value = true
             }
