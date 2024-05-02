@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.isPopupLayout
+import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
 
 
@@ -28,21 +30,24 @@ import co.edu.unicauca.adoptapp.R
 fun RegisterScreen(
     state: UserState,
     onEvent: (UserRegisterEvent) -> Unit,
+    navigationController: NavController
     ) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Register(Modifier.align(Alignment.Center), state, onEvent)
+        Register(Modifier.align(Alignment.Center), state, onEvent, navigationController)
     }
 }
 
 
 @Composable
-fun Register(modifier: Modifier, state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
-
-   // val coroutineScope = rememberCoroutineScope()
+fun Register(
+    modifier: Modifier, state: UserState,
+    onEvent: (UserRegisterEvent) -> Unit,
+    navigationController: NavController
+) {
 
         Column(modifier = modifier) {
             Title(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -62,6 +67,10 @@ fun Register(modifier: Modifier, state: UserState, onEvent: (UserRegisterEvent) 
             Spacer(modifier = Modifier.padding(10.dp))
             RegisterButton(true) {
                 onEvent(UserRegisterEvent.Register)
+                //Mostrar mensaje de registro exitoso
+                //TODO: falta implementar
+                //volver a la pantalla de login
+                navigationController.popBackStack()
             }
     }
 }

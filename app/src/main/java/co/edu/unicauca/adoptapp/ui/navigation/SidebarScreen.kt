@@ -129,7 +129,7 @@ fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
                 }
 
                 composable(NavigationScreens.Register.screen) {
-                    RegisterScreen(state = state, onEvent = onEvent)
+                    RegisterScreen(state = state, onEvent = onEvent, navigationController = navigationController)
                 }
 
                 composable(NavigationScreens.Publications.screen) {
