@@ -19,6 +19,9 @@ interface UserDao {
     @Query("SELECT * from user WHERE userId = :id")
     fun getUser(id: Int): Flow<User>
 
+    @Query("SELECT * from user WHERE email = :email AND password = :password")
+    fun getUserByEmailAndPassword(email: String, password: String): Flow<User?>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(user: User)
 

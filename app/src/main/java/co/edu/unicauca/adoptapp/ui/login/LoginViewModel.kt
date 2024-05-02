@@ -4,9 +4,12 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import co.edu.unicauca.adoptapp.data.user.UserDao
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-open class LoginViewModel : ViewModel() {
+class LoginViewModel(private val dao: UserDao) : ViewModel() {
 
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
@@ -20,10 +23,13 @@ open class LoginViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _loginSuccess = MutableLiveData<Boolean>()
+    val loginSuccess: LiveData<Boolean> = _loginSuccess
+
     fun onLoginChanged(email: String, password: String) {
         _email.value = email
         _password.value = password
-        _loginEnable.value = isValidEmail(email) && isValidPassword(password)
+        _loginEnable.value = isValidEmail(email)
     }
 
     private fun isValidPassword(password: String): Boolean = password.length > 6
@@ -33,8 +39,15 @@ open class LoginViewModel : ViewModel() {
 
     suspend fun onLoginSelected() {
         _isLoading.value = true
-        delay(4000)
-        _isLoading.value = false
+        viewModelScope.launch {
+          val user = dao.getUserByEmailAndPassword(email.value!!, password.value!!)
+            if (user != null) {
+                _loginSuccess.value = true
+            }
+            _isLoading.value = false
+        }
+
+        //delay(4000)
     }
 
 }

@@ -19,29 +19,36 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
+import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
+import co.edu.unicauca.adoptapp.ui.register_user.UserState
 import co.edu.unicauca.adoptapp.ui.theme.primaryDark
 import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 import co.edu.unicauca.adoptapp.ui.theme.secondaryLight
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel,navigationController: NavController) {
+fun LoginScreen(
+    state: UserState,
+    onEvent: (UserRegisterEvent) -> Unit,
+    navigationController: NavController
+) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Login(Modifier.align(Alignment.Center), viewModel,navigationController)
+        Login(Modifier.align(Alignment.Center),navigationController)
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel, navigationController: NavController) {
+fun Login(modifier: Modifier, navigationController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
+    val loginSuccess: Boolean by viewModel.loginSuccess.observeAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
 
     if (isLoading) {
@@ -63,6 +70,7 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navigationController: N
             LoginButton(navigationController,loginEnable) {
                 coroutineScope.launch {
                     viewModel.onLoginSelected()
+                    if (loginSuccess) navigationController.navigate(NavigationScreens.Home.screen)
                 }
             }
             Spacer(modifier = Modifier.padding(10.dp))
@@ -79,30 +87,19 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navigationController: N
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    // Crea un LoginViewModel simulado
-    val mockViewModel = object : LoginViewModel() {
-        // Sobrescribe las propiedades y funciones según sea necesario para la vista previa
-    }
-    //Usa el ViewModel simulado en LoginScreen
-    //LoginScreen(mockViewModel)
-}
-
 @Composable
 fun LoginButton(navigationController: NavController, loginEnable: Boolean, onLoginSelected: () -> Unit) {
     Button(
-        onClick = { navigationController.navigate(NavigationScreens.Home.screen) },
+        onClick = {
+            onLoginSelected()
+            //navigationController.navigate(NavigationScreens.Home.screen)
+            },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            //backgroundColor = Color(0xFF16C2D8),
             backgroundColor = primaryLight,
-            //disabledBackgroundColor = Color(0xFF73CBE6),
             disabledBackgroundColor = primaryDark,
-            //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
             disabledContentColor = Color.White
         ), enabled = loginEnable
@@ -115,25 +112,17 @@ fun LoginButton(navigationController: NavController, loginEnable: Boolean, onLog
 fun InvitadoButton (navigationController: NavController, onClick: () -> Unit) {
     Button(
         onClick = { navigationController.navigate(NavigationScreens.Home.screen) },
-
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            //backgroundColor = Color(0xFF16C2D8),
             backgroundColor = primaryLight,
-            //disabledBackgroundColor = Color(0xFF73CBE6),
-            //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
             disabledContentColor = Color.White
         ),
     ) {
         Text(text = "Invitado")
     }
-}
-
-fun Color(color: Color): Color {
-    return color
 }
 
 @Composable

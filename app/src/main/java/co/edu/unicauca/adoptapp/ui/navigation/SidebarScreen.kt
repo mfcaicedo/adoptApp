@@ -137,7 +137,7 @@ fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
                 }
 
                 composable(NavigationScreens.Login.screen) {
-                    LoginScreen(LoginViewModel(),navigationController)
+                    LoginScreen(navigationController = navigationController)
                 }
 
                 composable(NavigationScreens.Home.screen) {

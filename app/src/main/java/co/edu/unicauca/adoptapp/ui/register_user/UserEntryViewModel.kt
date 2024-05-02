@@ -1,18 +1,10 @@
 package co.edu.unicauca.adoptapp.ui.register_user
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
 import co.edu.unicauca.adoptapp.data.user.User
 import co.edu.unicauca.adoptapp.data.user.UserDao
-import co.edu.unicauca.adoptapp.data.user.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -21,7 +13,6 @@ import kotlinx.coroutines.launch
  */
 class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
 
-    //var state by mutableStateOf(UserState())
     private val _state = MutableStateFlow(UserState())
     val state: StateFlow<UserState> = _state
     fun onEvent(event: UserRegisterEvent) {
