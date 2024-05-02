@@ -60,7 +60,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.data.user.UserDatabase
 import co.edu.unicauca.adoptapp.data.user.UserRepository
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
@@ -74,16 +76,16 @@ import co.edu.unicauca.adoptapp.ui.login.LoginScreen
 import co.edu.unicauca.adoptapp.ui.login.LoginViewModel
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostScreen
 import co.edu.unicauca.adoptapp.ui.posts.MyPostsScreen
-import co.edu.unicauca.adoptapp.ui.register_user.RegisterActivity
-import co.edu.unicauca.adoptapp.ui.register_user.RegisterViewModel
-import co.edu.unicauca.adoptapp.ui.register_user.UserEntryViewModel
+import co.edu.unicauca.adoptapp.ui.register_user.RegisterScreen
+import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
+import co.edu.unicauca.adoptapp.ui.register_user.UserState
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LearnNavDrawer() {
+fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
     val navigationController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val snackbarHostState = remember { SnackbarHostState() }
@@ -117,6 +119,7 @@ fun LearnNavDrawer() {
                 SnackbarHost(hostState = snackbarHostState)
             },
         ) {
+
             NavHost(navController = navigationController,
 
                 startDestination = NavigationScreens.Initial.screen) {
@@ -126,7 +129,7 @@ fun LearnNavDrawer() {
                 }
 
                 composable(NavigationScreens.Register.screen) {
-                    RegisterActivity(UserEntryViewModel())
+                    RegisterScreen(state = state, onEvent = onEvent)
                 }
 
                 composable(NavigationScreens.Publications.screen) {

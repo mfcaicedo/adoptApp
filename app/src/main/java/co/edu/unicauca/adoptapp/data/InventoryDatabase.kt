@@ -11,10 +11,9 @@ import androidx.room.RoomDatabase
 import co.edu.unicauca.adoptapp.data.post.Post
 
 //@Database(entities = [User::class], version = 1, exportSchema = false)
-@Database(entities = arrayOf(User::class, Post::class), version = 1, exportSchema = false)
+@Database(entities = [User::class], version = 1, exportSchema = false)
 abstract class InventoryDatabase : RoomDatabase() {
-
-    abstract fun itemDao(): UserDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
@@ -29,7 +28,7 @@ abstract class InventoryDatabase : RoomDatabase() {
                      * permanently deletes all data from the tables in your database when it
                      * attempts to perform a migration with no defined migration path.
                      */
-                    .fallbackToDestructiveMigration()
+                    //.fallbackToDestructiveMigration()
                     .build()
                     .also { Instance = it }
             }

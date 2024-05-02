@@ -16,9 +16,9 @@ object AppViewModelProvider {
     val Factory = viewModelFactory {
 
         // Initializer for ItemEntryViewModel
-        initializer {
-            UserEntryViewModel(inventoryApplication().container.userRepository)
-        }
+        //initializer {
+           // UserEntryViewModel(inventoryApplication().container.userRepository)
+        //}
     }
 }
 

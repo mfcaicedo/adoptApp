@@ -15,6 +15,6 @@ class AppDataContainerUser(private val context: Context) : AppContainer {
      * Implementation for [ItemsRepository]
      */
     override val userRepository: UserRepository by lazy {
-        OfflineUsersRepository(InventoryDatabase.getDatabase(context).itemDao())
+        OfflineUsersRepository(InventoryDatabase.getDatabase(context).userDao())
     }
 }
