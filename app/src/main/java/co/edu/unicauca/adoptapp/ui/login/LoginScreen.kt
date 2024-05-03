@@ -192,8 +192,16 @@ fun EmailField(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
             backgroundColor = Color(0xFFDEDDDD),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
-        )
+        ),
+        isError = state.emailError != null,
     )
+    state.emailError?.let { error ->
+        Text(
+            text = error,
+            color = Color.Red,
+            fontSize = 12.sp
+        )
+    }
 }
 
 @Composable

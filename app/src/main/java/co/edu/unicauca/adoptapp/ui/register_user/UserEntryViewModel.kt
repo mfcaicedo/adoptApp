@@ -61,30 +61,41 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
                 val password = state.value.password
                 val isLoading = state.value.isLoading
 
-                _state.update {it.copy(
-                    isLoading = true
-                ) }
-                //validaciones
-                if (email.isBlank() || password.isBlank() || !isValidEmail(email)) {
-                    return
+                _state.update {
+                    it.copy(
+                        isLoading = true
+                    )
                 }
-                viewModelScope.launch {
-                    val userMaybe = runBlocking {
-                        dao.getUserByEmailAndPassword(email, password)
-                            .firstOrNull()  // Emite solo el primer usuario o null si no hay
-                    }
+                //validaciones
+                // if (email.isBlank() || password.isBlank() || !isValidEmail(email)) {
+                //   return
+                //}
 
-                    if (userMaybe != null) {
-                        val user = userMaybe
-                        _state.update { it.copy(
-                            isLoading = false,
-                            loginSuccess = true
-                        ) }
-                    } else {
-                        _state.update { it.copy(
-                            isLoading = false,
-                            loginSuccess = false
-                        ) }
+                validateFields("", email, password)
+
+                if ( state.value.emailError == null ) {
+                    viewModelScope.launch {
+                        val userMaybe = runBlocking {
+                            dao.getUserByEmailAndPassword(email, password)
+                                .firstOrNull()  // Emite solo el primer usuario o null si no hay
+                        }
+
+                        if (userMaybe != null) {
+                            val user = userMaybe
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    loginSuccess = true
+                                )
+                            }
+                        } else {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    loginSuccess = false
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -120,6 +131,21 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
     private fun isValidPassword(password: String): Boolean = password.length > 6
     private fun isValidEmail(email: String): Boolean =
         Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
+    private fun validateFields(name: String, email: String, password: String) {
+       // val nameError = if (name.isBlank()) "Name is required" else null
+        val emailError = if (email.isBlank() || !isValidEmail(email)) "Correo electrónico inválido" else null
+        // val passwordError = if (password.isBlank() || !isValidPassword(password)) "Password must be at least 6 characters" else null
+
+        _state.update {
+            it.copy(
+                //nameError = nameError,
+                emailError = emailError,
+                //passwordError = passwordError
+                // Agrega más campos de error según sea necesario para otros campos
+            )
+        }
+    }
 }
 
 

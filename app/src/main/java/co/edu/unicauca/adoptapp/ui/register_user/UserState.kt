@@ -8,5 +8,6 @@ data class UserState (
     val address: String = "",
     val registerEnable: Boolean = false,
     val isLoading: Boolean = false,
-    val loginSuccess: Boolean = false
+    val loginSuccess: Boolean = false,
+    val emailError: String? = null,
 )
