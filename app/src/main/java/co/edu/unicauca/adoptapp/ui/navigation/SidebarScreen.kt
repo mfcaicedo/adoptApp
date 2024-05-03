@@ -135,7 +135,6 @@ fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
                 }
 
                 composable(NavigationScreens.Login.screen) {
-                    val state = UserState()
                     LoginScreen(state = state, onEvent = onEvent, navigationController = navigationController)
                 }
 

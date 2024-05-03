@@ -7,5 +7,6 @@ data class UserState (
     val phone: String = "",
     val address: String = "",
     val registerEnable: Boolean = false,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val loginSuccess: Boolean = false
 )

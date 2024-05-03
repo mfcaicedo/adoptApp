@@ -1,13 +1,17 @@
 package co.edu.unicauca.adoptapp.ui.register_user
 import android.util.Patterns
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.edu.unicauca.adoptapp.data.user.User
 import co.edu.unicauca.adoptapp.data.user.UserDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * ViewModel to validate and insert users in the Room database.
@@ -16,6 +20,7 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
 
     private val _state = MutableStateFlow(UserState())
     val state: StateFlow<UserState> = _state
+
     fun onEvent(event: UserRegisterEvent) {
         when (event) {
             is UserRegisterEvent.Register -> {
@@ -26,7 +31,8 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
                 val address = state.value.address
                 val registerEnable = state.value.registerEnable
 
-                if (name.isBlank() || email.isBlank() || password.isBlank()) {
+                if (name.isBlank() || email.isBlank() || password.isBlank() ||
+                    !isValidEmail(email) || !isValidPassword(password)) {
                     return
                 }
                 val user = User(
@@ -48,6 +54,39 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
                     address = "",
                     registerEnable = false
                 ) }
+            }
+            is UserRegisterEvent.Login -> {
+                println("Login event")
+                val email = state.value.email
+                val password = state.value.password
+                val isLoading = state.value.isLoading
+
+                _state.update {it.copy(
+                    isLoading = true
+                ) }
+                //validaciones
+                if (email.isBlank() || password.isBlank() || !isValidEmail(email)) {
+                    return
+                }
+                viewModelScope.launch {
+                    val userMaybe = runBlocking {
+                        dao.getUserByEmailAndPassword(email, password)
+                            .firstOrNull()  // Emite solo el primer usuario o null si no hay
+                    }
+
+                    if (userMaybe != null) {
+                        val user = userMaybe
+                        _state.update { it.copy(
+                            isLoading = false,
+                            loginSuccess = true
+                        ) }
+                    } else {
+                        _state.update { it.copy(
+                            isLoading = false,
+                            loginSuccess = false
+                        ) }
+                    }
+                }
             }
             is UserRegisterEvent.SetName -> {
                 _state.update { it.copy(
@@ -74,36 +113,13 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
                     address = event.address
                 ) }
             }
+
+            else -> {}
         }
     }
-    /*
-    fun onLoginChanged(email: String, password: String) {
-        email = email
-        password = password
-        loginEnable.value = isValidEmail(email)
-    }
-     */
-
     private fun isValidPassword(password: String): Boolean = password.length > 6
-
     private fun isValidEmail(email: String): Boolean =
         Patterns.EMAIL_ADDRESS.matcher(email).matches()
-
-
-    suspend fun onLoginSelected() {
-        _isLoading.value = true
-        viewModelScope.launch {
-
-            val user = dao.getUserByEmailAndPassword(email.value!!, password.value!!)
-            if (user != null) {
-                _loginSuccess.value = true
-            }
-            _isLoading.value = false
-        }
-
-        //delay(4000)
-    }
-
 }
 
 

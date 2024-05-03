@@ -6,14 +6,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -23,8 +22,6 @@ import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
 import co.edu.unicauca.adoptapp.ui.register_user.UserState
 import co.edu.unicauca.adoptapp.ui.theme.primaryDark
 import co.edu.unicauca.adoptapp.ui.theme.primaryLight
-import co.edu.unicauca.adoptapp.ui.theme.secondaryLight
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -37,22 +34,21 @@ fun LoginScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Login(Modifier.align(Alignment.Center),state, onEvent,navigationController)
+        Login(
+            Modifier.align(Alignment.Center),
+            state,
+            onEvent,
+            navigationController
+        )
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, state: UserState,
-          onEvent: (UserRegisterEvent) -> Unit,
-          navigationController: NavController) {
+fun Login(
+    modifier: Modifier, state: UserState,
+    onEvent: (UserRegisterEvent) -> Unit,
+    navigationController: NavController) {
 
-    //val coroutineScope = rememberCoroutineScope()
-
-    //if (isLoading) {
-      //  Box(Modifier.fillMaxSize()) {
-        //    CircularProgressIndicator(Modifier.align(Alignment.Center))
-        //}
-    //} else {
         Column(modifier = modifier) {
             Title(modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(14.dp))
@@ -64,17 +60,16 @@ fun Login(modifier: Modifier, state: UserState,
             Spacer(modifier = Modifier.padding(8.dp))
             ForgotPassword(Modifier.align(Alignment.End))
             Spacer(modifier = Modifier.padding(16.dp))
-            //LoginButton(navigationController,loginEnable) {
-            LoginButton(true) {
-
-                //coroutineScope.launch {
-                 //   viewModel.onLoginSelected()
-                //    if (loginSuccess) navigationController.navigate(NavigationScreens.Home.screen)
-                //}
-                onEvent(UserRegisterEvent.Register)
-                navigationController.navigate(NavigationScreens.Home.screen)
-
+            LoginButton(loginEnable = true) {
+                onEvent(UserRegisterEvent.Login)
             }
+            LaunchedEffect(state.loginSuccess) {
+                val loginSuccess = state.loginSuccess
+                if (loginSuccess) {
+                    navigationController.navigate(NavigationScreens.Home.screen)
+                }
+            }
+
             Spacer(modifier = Modifier.padding(10.dp))
             Options(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(10.dp))
@@ -94,6 +89,7 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
     Button(
         onClick = {
             onLoginSelected()
+
             //navigationController.navigate(NavigationScreens.Home.screen)
             },
         modifier = Modifier
@@ -177,7 +173,8 @@ fun PasswordField(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
             backgroundColor = Color(0xFFDEDDDD),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
-        )
+        ),
+        visualTransformation = PasswordVisualTransformation()
     )
 }
 
