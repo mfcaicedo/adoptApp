@@ -60,10 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
 import co.edu.unicauca.adoptapp.R
-import co.edu.unicauca.adoptapp.data.user.UserDatabase
-import co.edu.unicauca.adoptapp.data.user.UserRepository
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
 import co.edu.unicauca.adoptapp.ui.publications.PubliFormViewModel
@@ -73,7 +70,6 @@ import co.edu.unicauca.adoptapp.ui.index.SearchBar
 import co.edu.unicauca.adoptapp.ui.initial.InitialActivity
 import co.edu.unicauca.adoptapp.ui.initial.InitialViewModel
 import co.edu.unicauca.adoptapp.ui.login.LoginScreen
-import co.edu.unicauca.adoptapp.ui.login.LoginViewModel
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostScreen
 import co.edu.unicauca.adoptapp.ui.posts.MyPostsScreen
 import co.edu.unicauca.adoptapp.ui.register_user.RegisterScreen
@@ -86,6 +82,8 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
+
+
     val navigationController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val snackbarHostState = remember { SnackbarHostState() }
@@ -137,7 +135,8 @@ fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
                 }
 
                 composable(NavigationScreens.Login.screen) {
-                    LoginScreen(navigationController = navigationController)
+                    val state = UserState()
+                    LoginScreen(state = state, onEvent = onEvent, navigationController = navigationController)
                 }
 
                 composable(NavigationScreens.Home.screen) {

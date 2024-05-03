@@ -1,4 +1,5 @@
 package co.edu.unicauca.adoptapp.ui.register_user
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.edu.unicauca.adoptapp.data.user.User
@@ -73,8 +74,36 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
                     address = event.address
                 ) }
             }
-
         }
     }
+    /*
+    fun onLoginChanged(email: String, password: String) {
+        email = email
+        password = password
+        loginEnable.value = isValidEmail(email)
+    }
+     */
+
+    private fun isValidPassword(password: String): Boolean = password.length > 6
+
+    private fun isValidEmail(email: String): Boolean =
+        Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
+
+    suspend fun onLoginSelected() {
+        _isLoading.value = true
+        viewModelScope.launch {
+
+            val user = dao.getUserByEmailAndPassword(email.value!!, password.value!!)
+            if (user != null) {
+                _loginSuccess.value = true
+            }
+            _isLoading.value = false
+        }
+
+        //delay(4000)
+    }
+
 }
+
 

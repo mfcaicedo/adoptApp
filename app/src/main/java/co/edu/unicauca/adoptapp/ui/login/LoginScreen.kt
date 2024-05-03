@@ -28,8 +28,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    state: LoginState,
-    onEvent: (LoginEvent) -> Unit,
+    state: UserState,
+    onEvent: (UserRegisterEvent) -> Unit,
     navigationController: NavController
 ) {
     Box(
@@ -42,8 +42,8 @@ fun LoginScreen(
 }
 
 @Composable
-fun Login(modifier: Modifier, state: LoginState,
-          onEvent: (LoginEvent) -> Unit,
+fun Login(modifier: Modifier, state: UserState,
+          onEvent: (UserRegisterEvent) -> Unit,
           navigationController: NavController) {
 
     //val coroutineScope = rememberCoroutineScope()
@@ -68,10 +68,10 @@ fun Login(modifier: Modifier, state: LoginState,
             LoginButton(true) {
 
                 //coroutineScope.launch {
-                //    viewModel.onLoginSelected()
+                 //   viewModel.onLoginSelected()
                 //    if (loginSuccess) navigationController.navigate(NavigationScreens.Home.screen)
                 //}
-                onEvent(LoginEvent.Login)
+                onEvent(UserRegisterEvent.Register)
                 navigationController.navigate(NavigationScreens.Home.screen)
 
             }
@@ -164,9 +164,9 @@ fun Options(modifier: Modifier) {
 }
 
 @Composable
-fun PasswordField(state: LoginState, onEvent: (LoginEvent) -> Unit) {
+fun PasswordField(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
     TextField(
-        value = state.password, onValueChange = { onEvent(LoginEvent.SetPassword(it)) },
+        value = state.password, onValueChange = { onEvent(UserRegisterEvent.SetPassword(it)) },
         placeholder = { Text(text = "Contraseña") },
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -182,9 +182,9 @@ fun PasswordField(state: LoginState, onEvent: (LoginEvent) -> Unit) {
 }
 
 @Composable
-fun EmailField(state: LoginState, onEvent: (LoginEvent) -> Unit) {
+fun EmailField(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
     TextField(
-        value = state.email, onValueChange = { onEvent(LoginEvent.SetEmail(it)) },
+        value = state.email, onValueChange = { onEvent(UserRegisterEvent.SetEmail(it)) },
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(text = "Email") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
