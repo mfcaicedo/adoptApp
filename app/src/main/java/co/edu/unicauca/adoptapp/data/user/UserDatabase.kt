@@ -6,6 +6,10 @@ import androidx.room.RoomDatabase
     entities = [User::class],
     version = 1
 )
+
 abstract class UserDatabase: RoomDatabase() {
     abstract val dao: UserDao
 }
+
+
+

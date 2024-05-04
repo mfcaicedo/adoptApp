@@ -16,6 +16,6 @@ import java.time.LocalDateTime
 data class AdoptionRequest(
     @PrimaryKey(autoGenerate = true)
     val adoptionRequestId: Int = 0,
-    val date: LocalDateTime,
+    val date: String,
     val description: String,
 )

@@ -68,6 +68,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier
+
 ) {
     TextField(
         value = "",

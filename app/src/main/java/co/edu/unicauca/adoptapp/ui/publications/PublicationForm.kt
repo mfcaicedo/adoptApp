@@ -41,7 +41,6 @@ fun PublicationForm(viewModel: PubliFormViewModel) {
     }
 }
 
-
 @Composable
 fun PublicationForm(modifier: Modifier, viewModel: PubliFormViewModel) {
     val name: String by viewModel.name.observeAsState(initial = "")
@@ -116,7 +115,6 @@ fun ImageButton(onLoginSelected: () -> Unit){
         Text(text = "Seleccionar Imagen")
     }
 }
-
 
 @Composable
 fun PublicationButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {

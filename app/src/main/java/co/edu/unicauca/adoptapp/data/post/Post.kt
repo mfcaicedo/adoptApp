@@ -6,17 +6,25 @@ import co.edu.unicauca.adoptapp.data.user.User
 import java.time.LocalDateTime
 import java.util.Date
 
-//foreignKeys = [ForeignKey(entity = User::class,
-//        parentColumns = ["userId"],
-//        childColumns = ["userId"],
-//        onDelete = ForeignKey.CASCADE)]
-@Entity(tableName = "post")
+
+@Entity(tableName = "post", foreignKeys = [ForeignKey(
+    entity = User::class,
+    parentColumns = ["userId"],  // Cambiar a "userId"
+    childColumns = ["userId"],
+    onDelete = ForeignKey.CASCADE
+)])
 data class Post(
     @PrimaryKey(autoGenerate = true)
     val postId: Int = 0,
     val title: String,
-    val description: String,
     val date: String,
+    val petName: String,
+    val petAge: Int,
+    val petBreed: String,
+    val petDescription: String,
+    val petColor: String,
+    val petSex: String,
+    val imageId: String,
 )
 
 

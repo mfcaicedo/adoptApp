@@ -10,4 +10,5 @@ data class UserState (
     val isLoading: Boolean = false,
     val loginSuccess: Boolean = false,
     val emailError: String? = null,
+    val passwordError: String? = null,
 )

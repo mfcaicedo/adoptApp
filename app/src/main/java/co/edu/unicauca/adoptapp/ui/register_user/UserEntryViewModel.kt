@@ -135,13 +135,13 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
     private fun validateFields(name: String, email: String, password: String) {
        // val nameError = if (name.isBlank()) "Name is required" else null
         val emailError = if (email.isBlank() || !isValidEmail(email)) "Correo electrónico inválido" else null
-        // val passwordError = if (password.isBlank() || !isValidPassword(password)) "Password must be at least 6 characters" else null
+        val passwordError = if (password.isBlank() || !isValidPassword(password)) "Password must be at least 6 characters" else null
 
         _state.update {
             it.copy(
                 //nameError = nameError,
                 emailError = emailError,
-                //passwordError = passwordError
+                passwordError = passwordError
                 // Agrega más campos de error según sea necesario para otros campos
             )
         }
