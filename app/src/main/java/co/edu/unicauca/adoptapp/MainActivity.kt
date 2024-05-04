@@ -17,6 +17,8 @@ import androidx.room.Room
 import co.edu.unicauca.adoptapp.data.user.UserDatabase
 
 import co.edu.unicauca.adoptapp.ui.navigation.LearnNavDrawer
+import co.edu.unicauca.adoptapp.ui.publications.PostEvent
+import co.edu.unicauca.adoptapp.ui.publications.PublicationFormViewModel
 import co.edu.unicauca.adoptapp.ui.register_user.UserEntryViewModel
 
 import co.edu.unicauca.adoptapp.ui.theme.AdoptAppTheme
@@ -28,8 +30,10 @@ class MainActivity : ComponentActivity() {
         Room.databaseBuilder(
             applicationContext,
             UserDatabase::class.java,
-            "adoptapp.db"
-        ).build()
+            "adoptapp.db",
+        )
+            //.fallbackToDestructiveMigration() //-> cada vez que se cambie la db
+            .build()
     }
     private val viewModel by viewModels<UserEntryViewModel>(
         factoryProducer = {
@@ -38,11 +42,24 @@ class MainActivity : ComponentActivity() {
                     modelClass: Class<T>,
                     extras: CreationExtras
                 ): T {
-                    return UserEntryViewModel(db.dao) as T
+                    return UserEntryViewModel(db.daoUser) as T
                 }
             }
         }
     )
+    private val viewModelPost by viewModels<PublicationFormViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras
+                ): T {
+                    return PublicationFormViewModel(db.daoPost) as T
+                }
+            }
+        }
+    )
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +70,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     val state by viewModel.state.collectAsState()
-                    //val loginState by viewModel.state.collectAsState()
+                    val statePost by viewModelPost.state.collectAsState()
                     LearnNavDrawer(
                         state = state,
-                        onEvent = viewModel::onEvent
-
+                        onEvent = viewModel::onEvent,
+                        statePost = statePost,
+                        onEventPost = viewModelPost::onEvent
                     )
                 }
             }

@@ -1,4 +1,5 @@
 package co.edu.unicauca.adoptapp.data.post
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -10,9 +11,11 @@ import java.util.Date
 @Entity(tableName = "post", foreignKeys = [ForeignKey(
     entity = User::class,
     parentColumns = ["userId"],  // Cambiar a "userId"
-    childColumns = ["userId"],
+    childColumns = ["postUserId"],
     onDelete = ForeignKey.CASCADE
-)])
+)],
+    indices = [androidx.room.Index("postUserId")]
+)
 data class Post(
     @PrimaryKey(autoGenerate = true)
     val postId: Int = 0,
@@ -25,6 +28,7 @@ data class Post(
     val petColor: String,
     val petSex: String,
     val imageId: String,
+    val postUserId: Int, //llave foranea
 )
 
 

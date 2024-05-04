@@ -26,88 +26,74 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
+import co.edu.unicauca.adoptapp.ui.register_user.UserState
 
 import kotlinx.coroutines.launch
 
 @Composable
-fun PublicationForm(viewModel: PubliFormViewModel) {
+fun PublicationForm(
+    state: PostState,
+    onEvent: (PostEvent) -> Unit,
+    navigationController: NavController
+) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        PublicationForm(Modifier.align(Alignment.Center), viewModel)
+        PublicationForm(Modifier.align(Alignment.Center), state, onEvent, navigationController)
     }
 }
 
 @Composable
-fun PublicationForm(modifier: Modifier, viewModel: PubliFormViewModel) {
-    val name: String by viewModel.name.observeAsState(initial = "")
-    val typeAnimal : String by viewModel.typeAnimal.observeAsState(initial = "")
-    val raza : String by viewModel.raza.observeAsState(initial = "")
-    val description : String by viewModel.description.observeAsState(initial = "")
-    val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
-    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
-    val coroutineScope = rememberCoroutineScope()
-
-    if (isLoading) {
-        Box(Modifier.fillMaxSize()) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
-        }
-    } else {
-        Column(modifier = modifier) {
-            Title(modifier = Modifier.align(Alignment.CenterHorizontally))
-            Spacer(modifier = Modifier.padding(10.dp))
-            HeaderImage(Modifier.align(Alignment.CenterHorizontally))
-            Spacer(modifier = Modifier.padding(10.dp))
-            NameField(name) { viewModel.onLoginChanged(typeAnimal, raza, description, it) }
-            Spacer(modifier = Modifier.padding(10.dp))
-            TypeField(typeAnimal) { viewModel.onLoginChanged(it, raza, description, name) }
-            Spacer(modifier = Modifier.padding(10.dp))
-            RazaField(raza) { viewModel.onLoginChanged(typeAnimal, it, description, name) }
-            Spacer(modifier = Modifier.padding(10.dp))
-            DescriptionField(description) { viewModel.onLoginChanged(typeAnimal, raza, it, name) }
-            Spacer(modifier = Modifier.padding(10.dp))
-            ImageButton {
-                coroutineScope.launch {
-                    viewModel.onLoginSelected()
-                }
-            }
-            Spacer(modifier = Modifier.padding(10.dp))
-            PublicationButton(loginEnable) {
-                coroutineScope.launch {
-                    viewModel.onLoginSelected()
-                }
-            }
+fun PublicationForm(
+    modifier: Modifier,
+    state: PostState,
+    onEvent: (PostEvent) -> Unit,
+    navigationController: NavController
+) {
+    Column(modifier = modifier) {
+        Title(modifier = Modifier.align(Alignment.CenterHorizontally))
+        Spacer(modifier = Modifier.padding(10.dp))
+        HeaderImage(Modifier.align(Alignment.CenterHorizontally))
+        Spacer(modifier = Modifier.padding(10.dp))
+        //Fields
+        TitleField(state, onEvent)
+        Spacer(modifier = Modifier.padding(10.dp))
+        PetNameField(state, onEvent)
+        Spacer(modifier = Modifier.padding(10.dp))
+        PetAgeField(state, onEvent)
+        Spacer(modifier = Modifier.padding(10.dp))
+        PetBreedField(state, onEvent)
+        Spacer(modifier = Modifier.padding(10.dp))
+        PetDescriptionField(state, onEvent)
+        Spacer(modifier = Modifier.padding(10.dp))
+        PetColorField(state, onEvent)
+        Spacer(modifier = Modifier.padding(10.dp))
+        PetSexField(state, onEvent)
+        Spacer(modifier = Modifier.padding(10.dp))
+        ImageButton(state, onEvent)
+        Spacer(modifier = Modifier.padding(10.dp))
+        PublicationButton(true) {
+            onEvent(PostEvent.Register)
+            //navigationController.navigate("home")
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
-    // Crea un LoginViewModel simulado
-    val mockViewModel = object : PubliFormViewModel() {
-        // Sobrescribe las propiedades y funciones según sea necesario para la vista previa
-    }
-
-    // Usa el ViewModel simulado
-    PublicationForm(mockViewModel)
-}
-
-@Composable
-fun ImageButton(onLoginSelected: () -> Unit){
+fun ImageButton(state: PostState, onEvent: (PostEvent) -> Unit) {
     Button(
-        onClick = { onLoginSelected() },
+        onClick = {  },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = Color(0xFF16C2D8),
-            //backgroundColor = Color(MaterialTheme.colors.primary),
             disabledBackgroundColor = Color(0xFF73CBE6),
-            //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
             disabledContentColor = Color.White
         ),
@@ -117,17 +103,15 @@ fun ImageButton(onLoginSelected: () -> Unit){
 }
 
 @Composable
-fun PublicationButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun PublicationButton(loginEnable: Boolean, onEventRegister: () -> Unit) {
     Button(
-        onClick = { onLoginSelected() },
+        onClick = { onEventRegister() },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = Color(0xFF16C2D8),
-            //backgroundColor = Color(MaterialTheme.colors.primary),
             disabledBackgroundColor = Color(0xFF73CBE6),
-            //disabledBackgroundColor = Color(MaterialTheme.colors.primary),
             contentColor = Color.White,
             disabledContentColor = Color.White
         ), enabled = loginEnable
@@ -135,15 +119,61 @@ fun PublicationButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
         Text(text = "Publicar")
     }
 }
-
-fun Color(color: Color): Color {
-    return color
-}
-
 @Composable
-fun NameField(Name: String, onTextFieldChanged: (String) -> Unit) {
+fun TitleField(state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
-        value = Name, onValueChange = { onTextFieldChanged(it) },
+        value = state.title, onValueChange = { onEvent(PostEvent.SetTitle(it)) },
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(text = "Nombre") },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        singleLine = true,
+        maxLines = 1,
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Color(0xFF636262),
+            backgroundColor = Color(0xFFDEDDDD),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
+}
+@Composable
+fun PetAgeField(state: PostState, onEvent: (PostEvent) -> Unit) {
+    TextField(
+        value = state.petAge.toString(), onValueChange = { onEvent(PostEvent.SetPetAge(Integer.parseInt(it))) },
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(text = "Nombre") },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        singleLine = true,
+        maxLines = 1,
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Color(0xFF636262),
+            backgroundColor = Color(0xFFDEDDDD),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
+}
+@Composable
+fun PetSexField(state: PostState, onEvent: (PostEvent) -> Unit) {
+    TextField(
+        value = state.petSex, onValueChange = { onEvent(PostEvent.SetPetSex(it)) },
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(text = "Nombre") },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        singleLine = true,
+        maxLines = 1,
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Color(0xFF636262),
+            backgroundColor = Color(0xFFDEDDDD),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
+}
+@Composable
+fun PetNameField(state: PostState, onEvent: (PostEvent) -> Unit) {
+    TextField(
+        value = state.petName, onValueChange = { onEvent(PostEvent.SetPetName(it)) },
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(text = "Nombre") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -159,9 +189,9 @@ fun NameField(Name: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun DescriptionField (description: String, onTextFieldChanged: (String) -> Unit) {
+fun PetDescriptionField (state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
-        value = description, onValueChange = { onTextFieldChanged(it) },
+        value = state.petDescription, onValueChange = { onEvent(PostEvent.SetPetDescription(it)) },
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(text = "Descripción") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -177,9 +207,9 @@ fun DescriptionField (description: String, onTextFieldChanged: (String) -> Unit)
 }
 
 @Composable
-fun RazaField(raza: String, onTextFieldChanged: (String) -> Unit) {
+fun PetBreedField(state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
-        value = raza, onValueChange = { onTextFieldChanged(it) },
+        value = state.petBreed, onValueChange = { onEvent(PostEvent.SetPetBreed(it)) },
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(text = "Raza") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -195,9 +225,9 @@ fun RazaField(raza: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun TypeField(typeAnimal: String, onTextFieldChanged: (String) -> Unit) {
+fun PetColorField(state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
-        value = typeAnimal, onValueChange = { onTextFieldChanged(it) },
+        value = state.petColor, onValueChange = { onEvent(PostEvent.SetPetColor(it)) },
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(text = "Tipo de animal") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -211,10 +241,6 @@ fun TypeField(typeAnimal: String, onTextFieldChanged: (String) -> Unit) {
         )
     )
 }
-
-
-
-
 
 @Composable
 fun HeaderImage(modifier: Modifier) {

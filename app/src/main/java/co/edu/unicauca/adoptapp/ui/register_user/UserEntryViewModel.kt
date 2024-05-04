@@ -24,6 +24,7 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
     fun onEvent(event: UserRegisterEvent) {
         when (event) {
             is UserRegisterEvent.Register -> {
+                println("reggg")
                 val name = state.value.name
                 val email = state.value.email
                 val password = state.value.password
@@ -66,20 +67,18 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
                         isLoading = true
                     )
                 }
-                //validaciones
-                // if (email.isBlank() || password.isBlank() || !isValidEmail(email)) {
-                //   return
-                //}
 
                 validateFields("", email, password)
 
                 if ( state.value.emailError == null ) {
                     viewModelScope.launch {
+                        println("siii 1 ")
                         val userMaybe = runBlocking {
+                           println("en el runBlocking")
                             dao.getUserByEmailAndPassword(email, password)
                                 .firstOrNull()  // Emite solo el primer usuario o null si no hay
                         }
-
+                        println("sii dkjf")
                         if (userMaybe != null) {
                             val user = userMaybe
                             _state.update {
@@ -128,7 +127,7 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
             else -> {}
         }
     }
-    private fun isValidPassword(password: String): Boolean = password.length > 6
+    private fun isValidPassword(password: String): Boolean = password.length > 3
     private fun isValidEmail(email: String): Boolean =
         Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
@@ -146,6 +145,7 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
             )
         }
     }
+
 }
 
 

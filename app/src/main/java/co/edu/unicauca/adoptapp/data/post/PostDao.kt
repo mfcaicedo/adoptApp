@@ -15,7 +15,7 @@ interface PostDao {
     @Query("SELECT * from post WHERE postId = :id")
     fun getPost(id: Int): Flow<Post>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(post: Post)
 
     @Update

@@ -66,7 +66,7 @@ fun Login(
             LaunchedEffect(state.loginSuccess) {
                 val loginSuccess = state.loginSuccess
                 if (loginSuccess) {
-                    navigationController.navigate(NavigationScreens.Home.screen)
+                    navigationController.navigate(NavigationScreens.Home.passId(state.userId))
                 }
             }
 

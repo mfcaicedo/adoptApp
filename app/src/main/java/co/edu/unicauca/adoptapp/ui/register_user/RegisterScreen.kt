@@ -70,7 +70,8 @@ fun Register(
                 onEvent(UserRegisterEvent.Register)
                 //Mostrar mensaje de registro exitoso
                 //TODO: falta implementar
-                //volver a la pantalla de login
+
+                //TODO: volver a la pantalla de login (FALTA)
                 navigationController.popBackStack()
             }
     }

@@ -63,7 +63,6 @@ import androidx.navigation.compose.rememberNavController
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
-import co.edu.unicauca.adoptapp.ui.publications.PubliFormViewModel
 import co.edu.unicauca.adoptapp.ui.publications.PublicationForm
 import co.edu.unicauca.adoptapp.ui.index.IndexScreen
 import co.edu.unicauca.adoptapp.ui.index.SearchBar
@@ -72,6 +71,8 @@ import co.edu.unicauca.adoptapp.ui.initial.InitialViewModel
 import co.edu.unicauca.adoptapp.ui.login.LoginScreen
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostScreen
 import co.edu.unicauca.adoptapp.ui.posts.MyPostsScreen
+import co.edu.unicauca.adoptapp.ui.publications.PostEvent
+import co.edu.unicauca.adoptapp.ui.publications.PostState
 import co.edu.unicauca.adoptapp.ui.register_user.RegisterScreen
 import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
 import co.edu.unicauca.adoptapp.ui.register_user.UserState
@@ -81,9 +82,12 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
-
-
+fun LearnNavDrawer(
+    state: UserState,
+    onEvent: (UserRegisterEvent) -> Unit,
+    statePost: PostState,
+    onEventPost: (PostEvent) -> Unit
+) {
     val navigationController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val snackbarHostState = remember { SnackbarHostState() }
@@ -109,6 +113,7 @@ fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
                         }
                     }
                 },
+                userId = navigationController.currentBackStackEntry?.arguments?.getString("userId")
             )
         },
     ) {
@@ -131,7 +136,7 @@ fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
                 }
 
                 composable(NavigationScreens.Publications.screen) {
-                    PublicationForm(PubliFormViewModel())
+                    PublicationForm(state = statePost, onEvent = onEventPost, navigationController = navigationController )
                 }
 
                 composable(NavigationScreens.Login.screen) {
@@ -149,8 +154,9 @@ fun LearnNavDrawer(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
                         backStackEntry ->
                     AdoptPetScreen(navigationController = navigationController, postId = backStackEntry.arguments?.getString("postId"))
                 }
-                composable(NavigationScreens.MyPosts(1).screen) {
-                    MyPostsScreen(1)
+                composable(NavigationScreens.MyPosts.screen) {
+                    backStackEntry ->
+                    MyPostsScreen(userId = backStackEntry.arguments?.getString("userId"),navigationController = navigationController)
 
                 }
                 composable(NavigationScreens.DetailPost.screen) { backStackEntry ->
@@ -258,6 +264,7 @@ fun MyDrawerContent(
     modifier: Modifier = Modifier,
     onItemSelected: (route: String) -> Unit,
     onBackPress: () -> Unit,
+    userId: String?
 ) {
     val menu = listOf(
         MenuItem(
@@ -273,7 +280,7 @@ fun MyDrawerContent(
         MenuItem(
             title = stringResource(R.string.item_my_post),
             icon = Icons.Default.Star,
-            route = NavigationScreens.MyPosts(userId = 1).screen
+            route = NavigationScreens.MyPosts.passId(id = userId ?: "0")
         ),
         MenuItem(
             title = stringResource(R.string.item_profile),
