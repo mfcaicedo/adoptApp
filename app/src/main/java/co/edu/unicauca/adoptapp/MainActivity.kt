@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             UserDatabase::class.java,
             "adoptapp.db",
         )
-            //.fallbackToDestructiveMigration() //-> cada vez que se cambie la db
+            .fallbackToDestructiveMigration() //-> cada vez que se cambie la db
             .build()
     }
     private val viewModel by viewModels<UserEntryViewModel>(

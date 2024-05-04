@@ -25,6 +25,7 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
         when (event) {
             is UserRegisterEvent.Register -> {
                 println("reggg")
+
                 val name = state.value.name
                 val email = state.value.email
                 val password = state.value.password
@@ -98,6 +99,12 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
                     }
                 }
             }
+            is UserRegisterEvent.SetUserId -> {
+                _state.update { it.copy(
+                    userId = event.userId
+                ) }
+            }
+
             is UserRegisterEvent.SetName -> {
                 _state.update { it.copy(
                     name = event.name

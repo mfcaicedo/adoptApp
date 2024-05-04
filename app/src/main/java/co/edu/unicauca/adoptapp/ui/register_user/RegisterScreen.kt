@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -24,7 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.isPopupLayout
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
-
+import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
+import androidx.compose.runtime.*
+import co.edu.unicauca.adoptapp.ui.theme.primaryDark
+import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 
 @Composable
 fun RegisterScreen(
@@ -49,6 +53,7 @@ fun Register(
     navigationController: NavController
 ) {
 
+    var showDialog by remember { mutableStateOf(false) }
         Column(modifier = modifier) {
             Title(modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(10.dp))
@@ -65,16 +70,50 @@ fun Register(
             Spacer(modifier = Modifier.padding(10.dp))
             PasswordField(state, onEvent)
             Spacer(modifier = Modifier.padding(10.dp))
+
             RegisterButton(true) {
 
                 onEvent(UserRegisterEvent.Register)
+                showDialog = true
                 //Mostrar mensaje de registro exitoso
                 //TODO: falta implementar
-
                 //TODO: volver a la pantalla de login (FALTA)
-                navigationController.popBackStack()
+                //navigationController.navigate(NavigationScreens.Login.screen)
+                //navigationController.popBackStack()
             }
-    }
+            if (showDialog) {
+                SuccessDialog(
+                    onDismissRequest = { showDialog = false },
+                    onConfirm = {
+                        showDialog = false
+                        navigationController.navigate(NavigationScreens.Login.screen)
+                    }
+                )
+            }
+
+        }
+}
+
+@Composable
+fun SuccessDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text("Registro exitoso!") },
+        confirmButton = {
+            Button(onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(
+                backgroundColor = primaryLight,
+                disabledBackgroundColor = primaryDark,
+                contentColor = Color.White,
+                disabledContentColor = Color.White
+            )) {
+                Text("OK")
+            }
+        }
+    )
 }
 
 @Composable
@@ -85,6 +124,8 @@ fun RegisterButton(loginEnable: Boolean, onRegisterSelected: () -> Unit) {
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
+            backgroundColor = primaryLight,
+            disabledBackgroundColor = primaryDark,
             contentColor = Color.White,
             disabledContentColor = Color.White
         ), enabled = loginEnable

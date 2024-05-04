@@ -1,6 +1,7 @@
 package co.edu.unicauca.adoptapp.ui.register_user
 
 data class UserState (
+    val userId: Int = 0,
     val name: String = "",
     val email: String = "",
     val password: String = "",

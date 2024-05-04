@@ -44,9 +44,6 @@ fun InitialActivity(viewModel: InitialViewModel,navigationController: NavControl
 @Composable
 fun Initial(modifier: Modifier, viewModel: InitialViewModel, navigationController: NavController) {
 
-    val email: String by viewModel.email.observeAsState(initial = "")
-    val password: String by viewModel.password.observeAsState(initial = "")
-    val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
 

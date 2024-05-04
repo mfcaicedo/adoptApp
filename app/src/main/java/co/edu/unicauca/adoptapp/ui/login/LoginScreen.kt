@@ -60,13 +60,16 @@ fun Login(
             Spacer(modifier = Modifier.padding(8.dp))
             ForgotPassword(Modifier.align(Alignment.End))
             Spacer(modifier = Modifier.padding(16.dp))
+
             LoginButton(loginEnable = true) {
                 onEvent(UserRegisterEvent.Login)
             }
             LaunchedEffect(state.loginSuccess) {
                 val loginSuccess = state.loginSuccess
                 if (loginSuccess) {
-                    navigationController.navigate(NavigationScreens.Home.passId(state.userId))
+                    println("-------login: "+state.userId)
+                    navigationController.navigate(NavigationScreens.Home.passId(state.userId.toString()))
+
                 }
             }
 

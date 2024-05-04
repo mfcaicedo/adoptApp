@@ -2,15 +2,26 @@ package co.edu.unicauca.adoptapp.ui.navigation
 
 sealed class NavigationScreens (val screen: String) {
 
+    private val userId: String = ""
+
     data object Initial : NavigationScreens("initial")
     data object Login : NavigationScreens("login")
     data object Register : NavigationScreens("register")
     data object Publications : NavigationScreens("publications")
+
     data object Home : NavigationScreens("home/{userId}") {
+        var userId: String = ""
+
         fun passId(id: String): String {
+            this.userId = id
             return this.screen.replace(oldValue = "{userId}", newValue = id)
         }
+
+        fun retrieveUserId(): String {
+            return this.userId
+        }
     }
+
     data class MyAdoptions(val userId: Int)  : NavigationScreens("my-adoptions/$userId")
     data class AdoptPet(val userId: Int, val postId: Int) : NavigationScreens("adopt-pet/$userId/$postId")
     data object MyPosts: NavigationScreens("my-posts/{userId}") {

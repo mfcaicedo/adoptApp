@@ -56,6 +56,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.navArgument
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.navigation.MyTopBar
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
@@ -64,6 +65,7 @@ import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.*
 
 @Composable
 fun SearchBar(
@@ -291,6 +293,7 @@ fun IndexScreen(
     scope: CoroutineScope,
     drawerState: DrawerState
 ) {
+println("------usuario id: "+ NavigationScreens.Home.retrieveUserId())
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
