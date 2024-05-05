@@ -64,12 +64,10 @@ fun Login(
             LoginButton(loginEnable = true) {
                 onEvent(UserRegisterEvent.Login)
             }
-            LaunchedEffect(state.loginSuccess) {
-                val loginSuccess = state.loginSuccess
-                if (loginSuccess) {
-                    println("-------login: "+state.userId)
+            LaunchedEffect(state.userId) {
+                val userId = state.userId
+                if (userId != 0) {
                     navigationController.navigate(NavigationScreens.Home.passId(state.userId.toString()))
-
                 }
             }
 
@@ -177,8 +175,16 @@ fun PasswordField(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         ),
-        visualTransformation = PasswordVisualTransformation()
+        visualTransformation = PasswordVisualTransformation(),
+        isError = state.passwordError != null,
     )
+    state.passwordError?.let { error ->
+        Text(
+            text = error,
+            color = Color.Red,
+            fontSize = 12.sp
+        )
+    }
 }
 
 @Composable

@@ -30,15 +30,15 @@ class PublicationFormViewModel (private val dao: PostDao) : ViewModel() {
                 val imageId = state.value.imageId
                 val postUserId = state.value.postUserId
 
-
-                if (title.isBlank() || petName.isBlank() || petColor.isBlank() || postUserId == 0) {
+                if (petName.isBlank() || petColor.isBlank() || postUserId == 0) {
                     return
                 }
+                println("Registering post $postUserId")
                 val post = Post(
-                    title = title,
+                    title = "Publicación de mascota",
                     date = date,
                     petName = petName,
-                    petAge = petAge,
+                    petAge = Integer.parseInt(petAge),
                     petBreed = petBreed,
                     petDescription = petDescription,
                     petColor = petColor,
@@ -55,7 +55,7 @@ class PublicationFormViewModel (private val dao: PostDao) : ViewModel() {
                         title = "",
                         date = "",
                         petName = "",
-                        petAge = 0,
+                        petAge = "",
                         petBreed = "",
                         petDescription = "",
                         petColor = "",

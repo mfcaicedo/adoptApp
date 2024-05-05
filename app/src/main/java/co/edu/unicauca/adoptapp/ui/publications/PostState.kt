@@ -4,7 +4,7 @@ data class PostState (
     val title: String = "",
     val date: String = "",
     val petName: String = "",
-    val petAge: Int = 0,
+    val petAge: String = "",
     val petBreed: String = "",
     val petDescription: String = "",
     val petColor: String = "",

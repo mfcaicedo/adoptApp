@@ -293,7 +293,6 @@ fun IndexScreen(
     scope: CoroutineScope,
     drawerState: DrawerState
 ) {
-println("------usuario id: "+ NavigationScreens.Home.retrieveUserId())
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)

@@ -30,11 +30,16 @@ import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
 import co.edu.unicauca.adoptapp.ui.register_user.UserState
+import co.edu.unicauca.adoptapp.ui.theme.primaryDark
+import co.edu.unicauca.adoptapp.ui.theme.primaryLight
+import co.edu.unicauca.adoptapp.ui.theme.secondaryDark
+import co.edu.unicauca.adoptapp.ui.theme.secondaryLight
 
 import kotlinx.coroutines.launch
 
 @Composable
 fun PublicationForm(
+    userId: String?,
     state: PostState,
     onEvent: (PostEvent) -> Unit,
     navigationController: NavController
@@ -44,25 +49,27 @@ fun PublicationForm(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        PublicationForm(Modifier.align(Alignment.Center), state, onEvent, navigationController)
+        PublicationForm(Modifier.align(Alignment.Center),userId, state, onEvent, navigationController)
     }
 }
 
 @Composable
 fun PublicationForm(
     modifier: Modifier,
+    userId: String?,
     state: PostState,
     onEvent: (PostEvent) -> Unit,
     navigationController: NavController
 ) {
+    //seteo el id del usuario
+    onEvent(PostEvent.SetPostUserId(Integer.parseInt(userId) ?: 0))
     Column(modifier = modifier) {
         Title(modifier = Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.padding(10.dp))
         HeaderImage(Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.padding(10.dp))
         //Fields
-        TitleField(state, onEvent)
-        Spacer(modifier = Modifier.padding(10.dp))
+       // TitleField(state, onEvent)
         PetNameField(state, onEvent)
         Spacer(modifier = Modifier.padding(10.dp))
         PetAgeField(state, onEvent)
@@ -92,8 +99,8 @@ fun ImageButton(state: PostState, onEvent: (PostEvent) -> Unit) {
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF16C2D8),
-            disabledBackgroundColor = Color(0xFF73CBE6),
+            backgroundColor = secondaryLight,
+            disabledBackgroundColor = secondaryDark,
             contentColor = Color.White,
             disabledContentColor = Color.White
         ),
@@ -110,8 +117,8 @@ fun PublicationButton(loginEnable: Boolean, onEventRegister: () -> Unit) {
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF16C2D8),
-            disabledBackgroundColor = Color(0xFF73CBE6),
+            backgroundColor = primaryLight,
+            disabledBackgroundColor  = primaryDark,
             contentColor = Color.White,
             disabledContentColor = Color.White
         ), enabled = loginEnable
@@ -124,7 +131,7 @@ fun TitleField(state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
         value = state.title, onValueChange = { onEvent(PostEvent.SetTitle(it)) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Nombre") },
+        placeholder = { Text(text = "Título") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         maxLines = 1,
@@ -139,10 +146,10 @@ fun TitleField(state: PostState, onEvent: (PostEvent) -> Unit) {
 @Composable
 fun PetAgeField(state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
-        value = state.petAge.toString(), onValueChange = { onEvent(PostEvent.SetPetAge(Integer.parseInt(it))) },
+        value = state.petAge, onValueChange = { onEvent(PostEvent.SetPetAge(it)) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Nombre") },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        placeholder = { Text(text = "Edad mascota") },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
         maxLines = 1,
         colors = TextFieldDefaults.textFieldColors(
@@ -158,7 +165,7 @@ fun PetSexField(state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
         value = state.petSex, onValueChange = { onEvent(PostEvent.SetPetSex(it)) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Nombre") },
+        placeholder = { Text(text = "Sexo de la mascota") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         maxLines = 1,
@@ -175,7 +182,7 @@ fun PetNameField(state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
         value = state.petName, onValueChange = { onEvent(PostEvent.SetPetName(it)) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Nombre") },
+        placeholder = { Text(text = "Nombre mascota") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         maxLines = 1,
@@ -211,7 +218,7 @@ fun PetBreedField(state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
         value = state.petBreed, onValueChange = { onEvent(PostEvent.SetPetBreed(it)) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Raza") },
+        placeholder = { Text(text = "Raza de la mascota") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         maxLines = 1,
@@ -229,7 +236,7 @@ fun PetColorField(state: PostState, onEvent: (PostEvent) -> Unit) {
     TextField(
         value = state.petColor, onValueChange = { onEvent(PostEvent.SetPetColor(it)) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Tipo de animal") },
+        placeholder = { Text(text = "Color de la mascota") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         maxLines = 1,

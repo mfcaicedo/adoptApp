@@ -73,26 +73,26 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
 
                 if ( state.value.emailError == null ) {
                     viewModelScope.launch {
-                        println("siii 1 ")
                         val userMaybe = runBlocking {
-                           println("en el runBlocking")
                             dao.getUserByEmailAndPassword(email, password)
                                 .firstOrNull()  // Emite solo el primer usuario o null si no hay
                         }
-                        println("sii dkjf")
                         if (userMaybe != null) {
                             val user = userMaybe
                             _state.update {
                                 it.copy(
                                     isLoading = false,
-                                    loginSuccess = true
+                                    loginSuccess = true,
+                                    userId = user.userId
                                 )
                             }
                         } else {
                             _state.update {
                                 it.copy(
                                     isLoading = false,
-                                    loginSuccess = false
+                                    loginSuccess = false,
+                                    passwordError = "El correo o la contraseña son incorrectos",
+                                    emailError = " "
                                 )
                             }
                         }
@@ -141,7 +141,7 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
     private fun validateFields(name: String, email: String, password: String) {
        // val nameError = if (name.isBlank()) "Name is required" else null
         val emailError = if (email.isBlank() || !isValidEmail(email)) "Correo electrónico inválido" else null
-        val passwordError = if (password.isBlank() || !isValidPassword(password)) "Password must be at least 6 characters" else null
+        val passwordError = if (password.isBlank() || !isValidPassword(password)) "La contraseña debe tener al menos 3 caracteres" else null
 
         _state.update {
             it.copy(
