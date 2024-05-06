@@ -92,6 +92,16 @@ class PublicationFormViewModel (private val dao: PostDao) : ViewModel() {
                     }
                 }
             }
+            is PostEvent.GetPost -> {
+                viewModelScope.launch {
+                    val post = dao.getPost(event.postId).first()
+                    _state.update {
+                        it.copy(
+                            post = post
+                        )
+                    }
+                }
+            }
             is PostEvent.SetTitle -> {
                 _state.update {
                     it.copy(

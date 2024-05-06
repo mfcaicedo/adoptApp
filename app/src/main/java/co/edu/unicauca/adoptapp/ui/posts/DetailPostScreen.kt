@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
@@ -53,23 +54,33 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.data.post.Post
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetContent
 import co.edu.unicauca.adoptapp.ui.index.SearchBar
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
+import co.edu.unicauca.adoptapp.ui.publications.PostEvent
+import co.edu.unicauca.adoptapp.ui.publications.PostState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DetailPostScreen(
     navigationController: NavController,
     postId: String?,
+    userId: String?,
+    state: PostState,
+    onEvent: (PostEvent) -> Unit,
 ) {
+    println("en datailll userId: $userId")
+    onEvent(PostEvent.GetPost(postId = postId!!.toInt()))
+    val post = state.post
+
     Scaffold(
         topBar = {
             DetailPostTopBar(navigationController = navigationController)
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            DetailPostContent(navigationController = navigationController, postId = postId)
+            DetailPostContent(navigationController = navigationController, post, userId ?: "0")
         }
     }
 }
@@ -86,7 +97,7 @@ fun DetailPostTopBar(navigationController: NavController) {
                 navigationController.popBackStack()
             }) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.description_back_icon),
                 )
             }
@@ -116,8 +127,15 @@ fun DetailPostTopBar(navigationController: NavController) {
     )
 }
 
+val listNamesDrawablesRes = listOf(
+    Pair("pitbull", R.drawable.pitbull),
+    Pair("pincher", R.drawable.pincher),
+    Pair("gato", R.drawable.gato),
+    Pair("ejemplo", R.drawable.image_example_1),
+)
+
 @Composable
-fun DetailPostContent(navigationController: NavController, postId: String?) {
+fun DetailPostContent(navigationController: NavController, post: Post?, userId: String = "0") {
     Box(
         modifier = Modifier
             .padding(top = 8.dp)
@@ -136,7 +154,7 @@ fun DetailPostContent(navigationController: NavController, postId: String?) {
                     .fillMaxWidth(),
             ){
                 Image(
-                    painter = painterResource(id = R.drawable.image_example_1),
+                    painter = painterResource(id = listNamesDrawablesRes.find { it.first == post?.imageId }?.second ?: R.drawable.image_example_1),
                     contentDescription = null,
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier
@@ -163,7 +181,7 @@ fun DetailPostContent(navigationController: NavController, postId: String?) {
                             Text(text = "Nombre:", style = MaterialTheme.typography.titleMedium)
                         }
                         Column {
-                            Text(text = "Tor")
+                            Text(text = post?.petName ?: "")
                         }
                     }
                 }
@@ -201,7 +219,7 @@ fun DetailPostContent(navigationController: NavController, postId: String?) {
                             Text(text = "Color:", style = MaterialTheme.typography.titleMedium)
                         }
                         Column {
-                            Text(text = "Café oscuro")
+                            Text(text = post?.petColor ?: "")
                         }
                     }
                 }
@@ -216,7 +234,7 @@ fun DetailPostContent(navigationController: NavController, postId: String?) {
                             Text(text = "Raza:", style = MaterialTheme.typography.titleMedium)
                         }
                         Column {
-                            Text(text = "Pitbull")
+                            Text(text = post?.petBreed ?: "")
                         }
                     }
                 }
@@ -231,7 +249,7 @@ fun DetailPostContent(navigationController: NavController, postId: String?) {
                 ) {
                     Text(text = "Descripción", style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.size(4.dp))
-                    Text(text = stringResource(R.string.lorem_ipsum))
+                    Text(text = post?.petDescription ?: "")
                 }
             }
             Row (
@@ -242,7 +260,7 @@ fun DetailPostContent(navigationController: NavController, postId: String?) {
             ) {
                 Button(
                     onClick = {
-                        navigationController.navigate(NavigationScreens.AdoptPet(userId = 1, postId = 1).screen)
+                        navigationController.navigate(NavigationScreens.AdoptPet.passId(userId = userId, postId = post?.postId.toString() ?: "0"))
                     },
                 ) {
                     Text(text = "Adoptar")

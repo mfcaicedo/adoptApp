@@ -19,4 +19,5 @@ data class PostState(
     val registerSuccess: Boolean = false,
     val posts: List<Post> = emptyList(),
     val postsAndUser: Map<User, List<Post>> = emptyMap(),
+    val post: Post? = null
     )

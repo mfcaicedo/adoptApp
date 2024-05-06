@@ -42,14 +42,14 @@ import co.edu.unicauca.adoptapp.ui.posts.DetailPostContent
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostTopBar
 
 @Composable
-fun AdoptPetScreen(navigationController: NavController, postId: String?) {
+fun AdoptPetScreen(navigationController: NavController, postId: String?, userId: String?) {
     Scaffold(
         topBar = {
             AdoptPetTopBar(navigationController = navigationController)
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            AdoptPetContent(navigationController = navigationController)
+            AdoptPetContent(navigationController = navigationController, postId = postId, userId = userId)
         }
     }
 }
@@ -102,7 +102,10 @@ fun AdoptPetTopBar(navigationController: NavController) {
 }
 
 @Composable
-fun AdoptPetContent(navigationController: NavController) {
+fun AdoptPetContent(navigationController: NavController, postId: String?, userId: String?) {
+    println("AdoptPetContent")
+    println("postId: $postId")
+    println("userId: $userId")
     Box(
         modifier = Modifier
             .fillMaxSize()

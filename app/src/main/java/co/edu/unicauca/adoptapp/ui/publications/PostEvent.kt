@@ -16,4 +16,5 @@ interface PostEvent {
     object registerSuccess: PostEvent
     object AllPost: PostEvent
     object AllPostAndUser: PostEvent
+    data class GetPost(val postId: Int): PostEvent
 }

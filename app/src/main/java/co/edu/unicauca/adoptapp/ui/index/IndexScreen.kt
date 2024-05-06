@@ -295,6 +295,8 @@ fun IndexScreen(
     val posts: Map<User, List<Post>> = state.postsAndUser
     println("post $posts")
     println("post ${posts.size}")
+    val userId =  navigationController.currentBackStackEntry?.arguments?.getString("userId")
+    println("userId $userId")
 
     Scaffold(
         snackbarHost = {
@@ -313,13 +315,13 @@ fun IndexScreen(
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            IndexContent(navigationController, posts)
+            IndexContent(navigationController, posts, userId ?: "0")
         }
     }
 }
 
 @Composable
-fun IndexContent(navigationController: NavController, posts: Map<User, List<Post>>){
+fun IndexContent(navigationController: NavController, posts: Map<User, List<Post>>, userId: String){
     Column(
         modifier = Modifier
     ) {
@@ -334,6 +336,12 @@ fun IndexContent(navigationController: NavController, posts: Map<User, List<Post
             ) {
                 ButtonCategories()
                 CarouselScreen()
+                val listNamesDrawablesRes = listOf(
+                    Pair("pitbull", R.drawable.pitbull),
+                    Pair("pincher", R.drawable.pincher),
+                    Pair("gato", R.drawable.gato),
+                    Pair("ejemplo", R.drawable.image_example_1),
+                )
                 for ((user, postList) in posts) {
                     for (post in postList) {
                         CardElement(
@@ -342,9 +350,9 @@ fun IndexContent(navigationController: NavController, posts: Map<User, List<Post
                             text = post.petName,
                             breed = post.petBreed,
                             description = post.petDescription,
-                            drawable = R.drawable.image_example_1,
+                            drawable = listNamesDrawablesRes.find { it.first == post.imageId }?.second ?: R.drawable.image_example_1,
                             onClick = {
-                                navigationController.navigate(NavigationScreens.DetailPost.passId(post.postId.toString()))
+                                navigationController.navigate(NavigationScreens.DetailPost.passId(post.postId.toString(), userId))
                             }
                         )
                         Spacer(modifier = Modifier.height(10.dp))
