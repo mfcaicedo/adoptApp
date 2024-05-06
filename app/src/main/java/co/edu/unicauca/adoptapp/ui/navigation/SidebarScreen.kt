@@ -153,9 +153,13 @@ fun LearnNavDrawer(
                     AdoptionsScreen()
                 }
 
-                composable(NavigationScreens.AdoptPet(userId = 1, postId = 1).screen) {
+                composable(NavigationScreens.AdoptPet.screen) {
                         backStackEntry ->
-                    AdoptPetScreen(navigationController = navigationController, postId = backStackEntry.arguments?.getString("postId"))
+                    AdoptPetScreen(
+                        navigationController = navigationController,
+                        postId = backStackEntry.arguments?.getString("postId"),
+                        userId = backStackEntry.arguments?.getString("userId")
+                    )
                 }
                 composable(NavigationScreens.MyPosts.screen) {
                     backStackEntry ->
@@ -163,7 +167,13 @@ fun LearnNavDrawer(
 
                 }
                 composable(NavigationScreens.DetailPost.screen) { backStackEntry ->
-                    DetailPostScreen(navigationController = navigationController, postId = backStackEntry.arguments?.getString("postId"))
+                    DetailPostScreen(
+                        navigationController = navigationController,
+                        postId = backStackEntry.arguments?.getString("postId"),
+                        userId = backStackEntry.arguments?.getString("userId"),
+                        statePost,
+                        onEventPost
+                    )
                 }
                 composable(NavigationScreens.Profile(1).screen) {
                     Box(

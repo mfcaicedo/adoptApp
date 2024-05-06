@@ -18,15 +18,21 @@ sealed class NavigationScreens (val screen: String) {
     }
 
     data class MyAdoptions(val userId: Int)  : NavigationScreens("my-adoptions/$userId")
-    data class AdoptPet(val userId: Int, val postId: Int) : NavigationScreens("adopt-pet/$userId/$postId")
+    data object AdoptPet : NavigationScreens("adopt-pet/{userId}/{postId}"){
+        fun passId(userId: String, postId: String): String {
+            return this.screen.replace(oldValue = "{userId}", newValue = userId)
+                .replace(oldValue = "{postId}", newValue = postId)
+        }
+    }
     data object MyPosts: NavigationScreens("my-posts/{userId}") {
         fun passId(id: String): String {
             return this.screen.replace(oldValue = "{userId}", newValue = id)
         }
     }
-    data object DetailPost: NavigationScreens("detail-post/{postId}") {
-        fun passId(id: String): String {
-            return this.screen.replace(oldValue = "{postId}", newValue = id)
+    data object DetailPost: NavigationScreens("detail-post/{postId}/{userId}"){
+        fun passId(postId: String, userId:String): String {
+            return this.screen.replace(oldValue = "{postId}", newValue = postId)
+                .replace(oldValue = "{userId}", newValue = userId)
         }
     }
     data object CreatePost: NavigationScreens("create-post/{userId}") {

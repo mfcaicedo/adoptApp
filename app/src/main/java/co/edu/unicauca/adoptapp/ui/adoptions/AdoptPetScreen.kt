@@ -1,5 +1,6 @@
 package co.edu.unicauca.adoptapp.ui.adoptions
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,19 +37,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.ui.index.IndexContent
+import co.edu.unicauca.adoptapp.ui.posts.DetailPostContent
+import co.edu.unicauca.adoptapp.ui.posts.DetailPostTopBar
 
 @Composable
-fun AdoptPetScreen(navigationController: NavController, postId: String?) {
-
-
-
+fun AdoptPetScreen(navigationController: NavController, postId: String?, userId: String?) {
     Scaffold(
         topBar = {
             AdoptPetTopBar(navigationController = navigationController)
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            AdoptPetContent(navigationController = navigationController)
+            AdoptPetContent(navigationController = navigationController, postId = postId, userId = userId)
         }
     }
 }
@@ -101,7 +102,10 @@ fun AdoptPetTopBar(navigationController: NavController) {
 }
 
 @Composable
-fun AdoptPetContent(navigationController: NavController) {
+fun AdoptPetContent(navigationController: NavController, postId: String?, userId: String?) {
+    println("AdoptPetContent")
+    println("postId: $postId")
+    println("userId: $userId")
     val anyChecked = remember { mutableStateOf(false) }
     val conditionsChecked = remember { mutableStateOf(List(conditions.size) { false }) }
 
