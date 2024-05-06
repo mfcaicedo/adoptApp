@@ -13,4 +13,7 @@ interface PostEvent {
     data class SetPostUserId(val postUserId: Int): PostEvent
     object Register: PostEvent
     object isLoading: PostEvent
+    object registerSuccess: PostEvent
+    object AllPost: PostEvent
+    object AllPostAndUser: PostEvent
 }

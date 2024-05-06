@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
 import co.edu.unicauca.adoptapp.ui.register_user.UserState
 import co.edu.unicauca.adoptapp.ui.theme.primaryDark
@@ -87,6 +89,12 @@ fun PublicationForm(
         PublicationButton(true) {
             onEvent(PostEvent.Register)
             //navigationController.navigate("home")
+        }
+        LaunchedEffect(state.registerSuccess) {
+            val registerSucces = state.registerSuccess
+            if (registerSucces) {
+                navigationController.popBackStack()
+            }
         }
     }
 }

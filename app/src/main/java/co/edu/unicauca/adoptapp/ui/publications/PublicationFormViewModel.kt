@@ -5,17 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.edu.unicauca.adoptapp.data.post.Post
 import co.edu.unicauca.adoptapp.data.post.PostDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PublicationFormViewModel (private val dao: PostDao) : ViewModel() {
 
     private val _state = MutableStateFlow(PostState())
     val state: StateFlow<PostState> = _state
-
     fun onEvent(event: PostEvent) {
         when (event) {
             is PostEvent.Register -> {
@@ -62,8 +64,32 @@ class PublicationFormViewModel (private val dao: PostDao) : ViewModel() {
                         petSex = "",
                         imageId = "",
                         postUserId = 0,
-                        registerEnable = false
+                        registerEnable = false,
+                        registerSuccess = true
                     )
+                }
+            }
+            is PostEvent.AllPost -> {
+                viewModelScope.launch {
+                    val posts = dao.getAllPosts().first()
+                    _state.update {
+                        it.copy(
+                            posts = posts
+                        )
+                    }
+                }
+            }
+            is PostEvent.AllPostAndUser -> {
+                viewModelScope.launch {
+                    val postsAndUser = withContext(Dispatchers.IO) {
+                        dao.getAllPostsAndUser() // Esta es tu función de consulta que devuelve un Map<User, List<Post>>
+                    }
+                    //val posts = dao.getAllPostsAndUser()
+                    _state.update {
+                        it.copy(
+                            postsAndUser = postsAndUser
+                        )
+                    }
                 }
             }
             is PostEvent.SetTitle -> {

@@ -140,7 +140,14 @@ fun LearnNavDrawer(
                 }
 
                 composable(NavigationScreens.Home.screen) {
-                    IndexScreen(navigationController, snackbarHostState, context, scope, drawerState)
+                    IndexScreen(
+                        navigationController,
+                        snackbarHostState,
+                        scope,
+                        drawerState,
+                        statePost,
+                        onEventPost
+                    )
                 }
                 composable(NavigationScreens.MyAdoptions(1).screen) {
                     AdoptionsScreen()

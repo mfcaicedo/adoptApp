@@ -111,7 +111,6 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
 fun InvitadoButton (navigationController: NavController, onClick: () -> Unit) {
     Button(
         onClick = {
-
             navigationController.navigate(NavigationScreens.Home.screen) },
         modifier = Modifier
             .fillMaxWidth()
