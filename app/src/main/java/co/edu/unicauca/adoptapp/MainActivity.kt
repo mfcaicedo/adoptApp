@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.room.Room
 import co.edu.unicauca.adoptapp.data.user.UserDatabase
+import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionFormViewModel
 
 import co.edu.unicauca.adoptapp.ui.navigation.LearnNavDrawer
 import co.edu.unicauca.adoptapp.ui.publications.PostEvent
@@ -60,6 +61,19 @@ class MainActivity : ComponentActivity() {
         }
     )
 
+    private val viewModelAdoption by viewModels<AdoptionFormViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras
+                ): T {
+                    return AdoptionFormViewModel(db.daoAdoptionRequest) as T
+                }
+            }
+        }
+    )
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,11 +85,14 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val state by viewModel.state.collectAsState()
                     val statePost by viewModelPost.state.collectAsState()
+                    val stateAdoption by viewModelAdoption.state.collectAsState()
                     LearnNavDrawer(
                         state = state,
                         onEvent = viewModel::onEvent,
                         statePost = statePost,
-                        onEventPost = viewModelPost::onEvent
+                        onEventPost = viewModelPost::onEvent,
+                        stateAdoption = stateAdoption,
+                        onEventAdoption = viewModelAdoption::onEvent
                     )
                 }
             }

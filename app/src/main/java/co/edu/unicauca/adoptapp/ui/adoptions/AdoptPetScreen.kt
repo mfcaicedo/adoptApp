@@ -38,21 +38,28 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.index.IndexContent
+import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostContent
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostTopBar
+import co.edu.unicauca.adoptapp.ui.publications.PostEvent
 
 @Composable
-fun AdoptPetScreen(navigationController: NavController, postId: String?, userId: String?) {
+fun AdoptPetScreen(
+    navigationController: NavController,
+    state: AdoptionState,
+    onEvent: (AdoptionEvent) -> Unit,
+    postId: String?, userId: String?) {
     Scaffold(
         topBar = {
             AdoptPetTopBar(navigationController = navigationController)
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            AdoptPetContent(navigationController = navigationController, postId = postId, userId = userId)
+            AdoptPetContent(navigationController = navigationController,state,onEvent, postId = postId, userId = userId)
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,14 +108,21 @@ fun AdoptPetTopBar(navigationController: NavController) {
     )
 }
 
+
 @Composable
-fun AdoptPetContent(navigationController: NavController, postId: String?, userId: String?) {
+fun AdoptPetContent(
+    navigationController: NavController,
+    state: AdoptionState,
+    onEvent: (AdoptionEvent) -> Unit,
+    postId: String?,
+    userId: String?) {
     println("AdoptPetContent")
     println("postId: $postId")
     println("userId: $userId")
     val anyChecked = remember { mutableStateOf(false) }
     val conditionsChecked = remember { mutableStateOf(List(conditions.size) { false }) }
-
+    onEvent(AdoptionEvent.SetPostUserId(userId?.toInt() ?: 0))
+    onEvent(AdoptionEvent.SetAdoptionPostId(postId?.toInt() ?: 0))
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -140,19 +154,17 @@ fun AdoptPetContent(navigationController: NavController, postId: String?, userId
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-
             ConditionsList(conditions, conditionsChecked, anyChecked)
-
             Button(
-                onClick = {  },
+                onClick = {navigationController.navigate(NavigationScreens.Home.passId(state.adoptionUserId.toString()))  },
                 enabled = anyChecked.value
             ) {
-                Text("Adoptar Animal")
+                Text("Adoptar Mascota")
             }
-
         }
     }
 }
+
 
 @Composable
 fun ConditionsList(

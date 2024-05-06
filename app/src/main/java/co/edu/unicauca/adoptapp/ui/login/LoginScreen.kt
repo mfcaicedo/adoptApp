@@ -209,6 +209,7 @@ fun HeaderImage(modifier: Modifier) {
     )
 }
 
+
 @Composable
 fun Title(modifier: Modifier) {
     Text(

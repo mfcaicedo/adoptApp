@@ -102,6 +102,8 @@ class PublicationFormViewModel (private val dao: PostDao) : ViewModel() {
                     }
                 }
             }
+
+
             is PostEvent.SetTitle -> {
                 _state.update {
                     it.copy(

@@ -70,6 +70,7 @@ fun PublicationForm(
 ) {
     //seteo el id del usuario
     onEvent(PostEvent.SetPostUserId(Integer.parseInt(userId) ?: 0))
+
     var showDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
         Title(modifier = Modifier.align(Alignment.CenterHorizontally))

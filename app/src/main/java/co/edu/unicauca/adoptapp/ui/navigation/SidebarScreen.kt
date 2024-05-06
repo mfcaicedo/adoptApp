@@ -62,6 +62,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptPetScreen
+import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionEvent
+import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionState
 import co.edu.unicauca.adoptapp.ui.adoptions.AdoptionsScreen
 import co.edu.unicauca.adoptapp.ui.publications.PublicationForm
 import co.edu.unicauca.adoptapp.ui.index.IndexScreen
@@ -86,7 +88,9 @@ fun LearnNavDrawer(
     state: UserState,
     onEvent: (UserRegisterEvent) -> Unit,
     statePost: PostState,
-    onEventPost: (PostEvent) -> Unit
+    onEventPost: (PostEvent) -> Unit,
+    stateAdoption: AdoptionState,
+    onEventAdoption: (AdoptionEvent) -> Unit
 ) {
     val navigationController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -157,6 +161,8 @@ fun LearnNavDrawer(
                         backStackEntry ->
                     AdoptPetScreen(
                         navigationController = navigationController,
+                        state = stateAdoption,
+                        onEvent = onEventAdoption,
                         postId = backStackEntry.arguments?.getString("postId"),
                         userId = backStackEntry.arguments?.getString("userId")
                     )
