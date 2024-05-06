@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
@@ -18,7 +19,10 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,10 +30,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
+import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
 import co.edu.unicauca.adoptapp.ui.register_user.UserState
+import co.edu.unicauca.adoptapp.ui.theme.primaryDark
+import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 
 import kotlinx.coroutines.launch
 
@@ -55,6 +63,7 @@ fun PublicationForm(
     onEvent: (PostEvent) -> Unit,
     navigationController: NavController
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
         Title(modifier = Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.padding(10.dp))
@@ -77,9 +86,20 @@ fun PublicationForm(
         Spacer(modifier = Modifier.padding(10.dp))
         ImageButton(state, onEvent)
         Spacer(modifier = Modifier.padding(10.dp))
+
         PublicationButton(true) {
             onEvent(PostEvent.Register)
+            showDialog = true
             //navigationController.navigate("home")
+        }
+        if (showDialog) {
+            SuccessDialog(
+                onDismissRequest = { showDialog = false },
+                onConfirm = {
+                    showDialog = false
+                    navigationController.navigate(NavigationScreens.Login.screen)
+                }
+            )
         }
     }
 }
@@ -100,6 +120,28 @@ fun ImageButton(state: PostState, onEvent: (PostEvent) -> Unit) {
     ) {
         Text(text = "Seleccionar Imagen")
     }
+}
+
+@Composable
+fun SuccessDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text("Publicacion exitosa!") },
+        confirmButton = {
+            Button(onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = primaryLight,
+                    disabledBackgroundColor = primaryDark,
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White
+                )) {
+                Text("OK")
+            }
+        }
+    )
 }
 
 @Composable
@@ -253,9 +295,13 @@ fun HeaderImage(modifier: Modifier) {
 
 @Composable
 fun Title(modifier: Modifier) {
+
     Text(
         text = "AdoptApp",
-        color = Color(0xFF636262),
+        color = primaryLight,
+        fontSize = 34.sp,
         modifier = modifier
     )
 }
+
+

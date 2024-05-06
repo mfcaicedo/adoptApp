@@ -20,6 +20,7 @@ import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
 import co.edu.unicauca.adoptapp.ui.register_user.UserState
+import co.edu.unicauca.adoptapp.ui.theme.grande
 import co.edu.unicauca.adoptapp.ui.theme.primaryDark
 import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 
@@ -57,19 +58,17 @@ fun Login(
             EmailField(state, onEvent)
             Spacer(modifier = Modifier.padding(4.dp))
             PasswordField(state, onEvent)
-            Spacer(modifier = Modifier.padding(8.dp))
-            ForgotPassword(Modifier.align(Alignment.End))
             Spacer(modifier = Modifier.padding(16.dp))
-
             LoginButton(loginEnable = true) {
                 onEvent(UserRegisterEvent.Login)
+
             }
+
             LaunchedEffect(state.loginSuccess) {
                 val loginSuccess = state.loginSuccess
                 if (loginSuccess) {
                     println("-------login: "+state.userId)
                     navigationController.navigate(NavigationScreens.Home.passId(state.userId.toString()))
-
                 }
             }
 
@@ -113,7 +112,6 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
 fun InvitadoButton (navigationController: NavController, onClick: () -> Unit) {
     Button(
         onClick = {
-
             navigationController.navigate(NavigationScreens.Home.screen) },
         modifier = Modifier
             .fillMaxWidth()
@@ -128,17 +126,6 @@ fun InvitadoButton (navigationController: NavController, onClick: () -> Unit) {
     }
 }
 
-@Composable
-fun ForgotPassword(modifier: Modifier) {
-    Text(
-        text = "Olvidaste la contraseña?",
-        modifier = modifier.clickable { },
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Bold,
-        color = Color(0xFF83CBE1)
-
-    )
-}
 
 @Composable
 fun RegisterText(navigationController: NavController, modifier: Modifier) {
@@ -218,5 +205,32 @@ fun HeaderImage(modifier: Modifier) {
 
 @Composable
 fun Title(modifier: Modifier) {
+    Text(
+        text = "AdoptApp",
+        color = primaryLight,
+        fontSize = 34.sp,
+        modifier = modifier
+    )
+}
 
+@Composable
+fun ErrorDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text("Datos Incorrectos!") },
+        confirmButton = {
+            Button(onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = primaryLight,
+                    disabledBackgroundColor = primaryDark,
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White
+                )) {
+                Text("OK")
+            }
+        }
+    )
 }

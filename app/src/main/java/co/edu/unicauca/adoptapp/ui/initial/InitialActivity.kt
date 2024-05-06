@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
@@ -71,17 +72,7 @@ fun Initial(modifier: Modifier, viewModel: InitialViewModel, navigationControlle
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    // Crea un LoginViewModel simulado
-    val mockViewModel = object : InitialViewModel() {
-        // Sobrescribe las propiedades y funciones según sea necesario para la vista previa
-    }
 
-    // Usa el ViewModel simulado en LoginScreen
-    //InitialActivity(mockViewModel,NavController())
-}
 
 
 @Composable
@@ -119,5 +110,10 @@ fun HeaderImage(modifier: Modifier) {
 
 @Composable
 fun Title(modifier: Modifier) {
-
+    Text(
+        text = "AdoptApp",
+        color = primaryLight,
+        fontSize = 34.sp,
+        modifier = modifier
+    )
 }
