@@ -11,14 +11,9 @@ sealed class NavigationScreens (val screen: String) {
 
     data object Home : NavigationScreens("home/{userId}") {
         var userId: String = ""
-
         fun passId(id: String): String {
             this.userId = id
             return this.screen.replace(oldValue = "{userId}", newValue = id)
-        }
-
-        fun retrieveUserId(): String {
-            return this.userId
         }
     }
 

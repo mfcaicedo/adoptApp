@@ -1,6 +1,5 @@
 package co.edu.unicauca.adoptapp.ui.adoptions
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,12 +36,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.edu.unicauca.adoptapp.R
-import co.edu.unicauca.adoptapp.ui.index.IndexContent
-import co.edu.unicauca.adoptapp.ui.posts.DetailPostContent
-import co.edu.unicauca.adoptapp.ui.posts.DetailPostTopBar
 
 @Composable
 fun AdoptPetScreen(navigationController: NavController, postId: String?) {
+
+
+
     Scaffold(
         topBar = {
             AdoptPetTopBar(navigationController = navigationController)
@@ -103,6 +102,9 @@ fun AdoptPetTopBar(navigationController: NavController) {
 
 @Composable
 fun AdoptPetContent(navigationController: NavController) {
+    val anyChecked = remember { mutableStateOf(false) }
+    val conditionsChecked = remember { mutableStateOf(List(conditions.size) { false }) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -134,13 +136,14 @@ fun AdoptPetContent(navigationController: NavController) {
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            for (condition in conditions) {
-                val conditionText = condition["conditionText"] as String
-                val checked = condition["checked"] as Boolean
-                ConditionAdoptPet(
-                    conditionText = conditionText,
-                    checked = checked
-                )
+
+            ConditionsList(conditions, conditionsChecked, anyChecked)
+
+            Button(
+                onClick = {  },
+                enabled = anyChecked.value
+            ) {
+                Text("Adoptar Animal")
             }
 
         }
@@ -148,23 +151,41 @@ fun AdoptPetContent(navigationController: NavController) {
 }
 
 @Composable
-fun ConditionAdoptPet(
-    conditionText: String,
-    checked: Boolean = false
+fun ConditionsList(
+    conditions: List<Map<String, Any>>,
+    conditionsChecked: MutableState<List<Boolean>>,
+    anyChecked: MutableState<Boolean>
 ) {
-    Row (
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        CheckBox(checked = checked)
-        Text(
-            text = conditionText,
-            style = MaterialTheme.typography.bodyMedium
+    for ((index, condition) in conditions.withIndex()) {
+        val conditionText = condition["conditionText"] as String
+        val checked = conditionsChecked.value[index]
+        ConditionAdoptPet(
+            conditionText = conditionText,
+            checked = checked,
+            onCheckedChange = { isChecked ->
+                conditionsChecked.value = conditionsChecked.value.toMutableList().also { it[index] = isChecked }
+                anyChecked.value = conditionsChecked.value.any { it }
+            }
         )
     }
 }
+
+@Composable
+fun ConditionAdoptPet(
+    conditionText: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(checked = checked, onCheckedChange = onCheckedChange)
+        Text(text = conditionText, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
 
 @Composable
 fun CheckBox(

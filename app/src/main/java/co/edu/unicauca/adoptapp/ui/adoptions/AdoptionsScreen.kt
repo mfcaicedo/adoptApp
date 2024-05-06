@@ -16,4 +16,5 @@ fun AdoptionsScreen() {
     ){
         Text(text = "Adopciones")
     }
+
 }

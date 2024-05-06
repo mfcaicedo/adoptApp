@@ -20,7 +20,6 @@ import co.edu.unicauca.adoptapp.R
 import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
 import co.edu.unicauca.adoptapp.ui.register_user.UserState
-import co.edu.unicauca.adoptapp.ui.theme.grande
 import co.edu.unicauca.adoptapp.ui.theme.primaryDark
 import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 
@@ -63,11 +62,9 @@ fun Login(
                 onEvent(UserRegisterEvent.Login)
 
             }
-
-            LaunchedEffect(state.loginSuccess) {
-                val loginSuccess = state.loginSuccess
-                if (loginSuccess) {
-                    println("-------login: "+state.userId)
+            LaunchedEffect(state.userId) {
+                val userId = state.userId
+                if (userId != 0) {
                     navigationController.navigate(NavigationScreens.Home.passId(state.userId.toString()))
                 }
             }
@@ -112,6 +109,7 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
 fun InvitadoButton (navigationController: NavController, onClick: () -> Unit) {
     Button(
         onClick = {
+
             navigationController.navigate(NavigationScreens.Home.screen) },
         modifier = Modifier
             .fillMaxWidth()
@@ -164,8 +162,16 @@ fun PasswordField(state: UserState, onEvent: (UserRegisterEvent) -> Unit) {
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         ),
-        visualTransformation = PasswordVisualTransformation()
+        visualTransformation = PasswordVisualTransformation(),
+        isError = state.passwordError != null,
     )
+    state.passwordError?.let { error ->
+        Text(
+            text = error,
+            color = Color.Red,
+            fontSize = 12.sp
+        )
+    }
 }
 
 @Composable
@@ -213,24 +219,3 @@ fun Title(modifier: Modifier) {
     )
 }
 
-@Composable
-fun ErrorDialog(
-    onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = { Text("Datos Incorrectos!") },
-        confirmButton = {
-            Button(onClick = onConfirm,
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = primaryLight,
-                    disabledBackgroundColor = primaryDark,
-                    contentColor = Color.White,
-                    disabledContentColor = Color.White
-                )) {
-                Text("OK")
-            }
-        }
-    )
-}

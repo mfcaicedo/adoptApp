@@ -135,16 +135,19 @@ fun LearnNavDrawer(
                     RegisterScreen(state = state, onEvent = onEvent, navigationController = navigationController)
                 }
 
-                composable(NavigationScreens.Publications.screen) {
-                    PublicationForm(state = statePost, onEvent = onEventPost, navigationController = navigationController )
-                }
-
                 composable(NavigationScreens.Login.screen) {
                     LoginScreen(state = state, onEvent = onEvent, navigationController = navigationController)
                 }
 
                 composable(NavigationScreens.Home.screen) {
-                    IndexScreen(navigationController, snackbarHostState, context, scope, drawerState)
+                    IndexScreen(
+                        navigationController,
+                        snackbarHostState,
+                        scope,
+                        drawerState,
+                        statePost,
+                        onEventPost
+                    )
                 }
                 composable(NavigationScreens.MyAdoptions(1).screen) {
                     AdoptionsScreen()
@@ -169,6 +172,15 @@ fun LearnNavDrawer(
                     ) {
                         Text(text = "Mi perfil")
                     }
+                }
+                composable(NavigationScreens.CreatePost.screen) {
+                    navBackStackEntry ->
+                    PublicationForm(
+                        userId = navBackStackEntry.arguments?.getString("userId"),
+                        state = statePost,
+                        onEvent = onEventPost,
+                        navigationController = navigationController
+                    )
                 }
                 composable(NavigationScreens.Favorites(1).screen) {
                     Box(

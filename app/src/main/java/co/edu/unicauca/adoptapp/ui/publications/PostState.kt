@@ -1,10 +1,13 @@
 package co.edu.unicauca.adoptapp.ui.publications
 
-data class PostState (
+import co.edu.unicauca.adoptapp.data.post.Post
+import co.edu.unicauca.adoptapp.data.user.User
+
+data class PostState(
     val title: String = "",
     val date: String = "",
     val petName: String = "",
-    val petAge: Int = 0,
+    val petAge: String = "",
     val petBreed: String = "",
     val petDescription: String = "",
     val petColor: String = "",
@@ -13,4 +16,7 @@ data class PostState (
     val postUserId: Int = 0, //llave foranea
     val registerEnable: Boolean = false,
     val isLoading: Boolean = false,
+    val registerSuccess: Boolean = false,
+    val posts: List<Post> = emptyList(),
+    val postsAndUser: Map<User, List<Post>> = emptyMap(),
     )

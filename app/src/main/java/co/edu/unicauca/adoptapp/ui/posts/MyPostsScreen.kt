@@ -1,7 +1,8 @@
 package co.edu.unicauca.adoptapp.ui.posts
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -13,14 +14,13 @@ import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 
 @Composable
 fun MyPostsScreen(userId: String?, navigationController: NavController) {
-    Box(
+    Column(
         Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Column (
-            Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Row(
+            horizontalArrangement = Arrangement.Center
         ) {
             Button(
                 onClick = {
@@ -30,6 +30,10 @@ fun MyPostsScreen(userId: String?, navigationController: NavController) {
                 Text("Crear publicación")
             }
         }
-        Text(text = "Publicaciones del usuario con id: $userId")
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Mis publicaciones")
+        }
     }
 }

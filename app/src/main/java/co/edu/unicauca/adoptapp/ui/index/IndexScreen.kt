@@ -66,6 +66,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.*
+import co.edu.unicauca.adoptapp.data.post.Post
+import co.edu.unicauca.adoptapp.data.post.PostDao
+import co.edu.unicauca.adoptapp.data.user.User
+import co.edu.unicauca.adoptapp.ui.publications.PostEvent
+import co.edu.unicauca.adoptapp.ui.publications.PostState
 
 @Composable
 fun SearchBar(
@@ -99,7 +104,11 @@ fun SearchBar(
 @Composable
 fun CardElement(
     @DrawableRes drawable: Int,
-    @StringRes text: Int,
+    userName: String,
+    userLocation: String,
+    text: String,
+    breed: String,
+    description: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -129,7 +138,7 @@ fun CardElement(
                 ) {
 
                     Text(
-                        text = "Milthon Caicedo",
+                        text = userName,
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Spacer(modifier = Modifier.height(5.dp))
@@ -141,7 +150,7 @@ fun CardElement(
                             contentDescription = null
                         )
                         Text(
-                            text = "Popayán Cauca",
+                            text = userLocation,
                         )
                     }
                 }
@@ -172,16 +181,16 @@ fun CardElement(
                 ) {
 
                     Text(
-                        text = stringResource(text),
+                        text = text,
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Spacer(modifier = Modifier.height(5.dp))
                     Text(
-                        text = "Pitbull",
+                        text = breed,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(id = R.string.lorem_ipsum),
+                        text = description,
                         modifier = Modifier.padding()
                     )
                 }
@@ -269,31 +278,24 @@ fun CarouselScreen() {
     }
 }
 
-@Composable
-fun MenuButton() {
-    IconButton(
-        onClick = { /*TODO*/ },
-        modifier = Modifier.padding(2.dp),
-        ) {
-        Icon(
-            imageVector = Icons.Default.Menu,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.scrim,
-            modifier = Modifier.size(34.dp)
-        )
-    }
-}
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun IndexScreen(
     navigationController: NavController,
     snackbarHostState: SnackbarHostState,
-    context: Context,
     scope: CoroutineScope,
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    state: PostState,
+    onEvent: (PostEvent) -> Unit
 ) {
-println("------usuario id: "+ NavigationScreens.Home.retrieveUserId())
+
+    //onEvent(PostEvent.AllPost)
+    //val posts: List<Post>
+    onEvent(PostEvent.AllPostAndUser)
+    val posts: Map<User, List<Post>> = state.postsAndUser
+    println("post $posts")
+    println("post ${posts.size}")
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -311,13 +313,13 @@ println("------usuario id: "+ NavigationScreens.Home.retrieveUserId())
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            IndexContent(navigationController)
+            IndexContent(navigationController, posts)
         }
     }
 }
 
 @Composable
-fun IndexContent(navigationController: NavController){
+fun IndexContent(navigationController: NavController, posts: Map<User, List<Post>>){
     Column(
         modifier = Modifier
     ) {
@@ -332,39 +334,23 @@ fun IndexContent(navigationController: NavController){
             ) {
                 ButtonCategories()
                 CarouselScreen()
-                for (i in 1..5) {
-                    CardElement(
-                        text = R.string.image_example_1,
-                        drawable = R.drawable.image_example_1,
-                        onClick = {
-                            navigationController.navigate(NavigationScreens.DetailPost.passId(i.toString()))
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
+                for ((user, postList) in posts) {
+                    for (post in postList) {
+                        CardElement(
+                            userName = user.name,
+                            userLocation = user.address,
+                            text = post.petName,
+                            breed = post.petBreed,
+                            description = post.petDescription,
+                            drawable = R.drawable.image_example_1,
+                            onClick = {
+                                navigationController.navigate(NavigationScreens.DetailPost.passId(post.postId.toString()))
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
                 }
             }
         }
-    }
-}
-
-/**
- * Preview
- */
-@Preview(showBackground = true)
-@Composable
-fun SearchPreview() {
-    AdoptAppTheme {
-        SearchBar()
-    }
-}
-@Preview(showBackground = true)
-@Composable
-fun CardElementPreview() {
-    AdoptAppTheme {
-        CardElement(
-            text = R.string.image_example_1,
-            drawable = R.drawable.image_example_1,
-            onClick = {}
-        )
     }
 }
