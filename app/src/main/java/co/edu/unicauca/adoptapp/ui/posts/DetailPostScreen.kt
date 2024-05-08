@@ -70,7 +70,6 @@ fun DetailPostScreen(
     state: PostState,
     onEvent: (PostEvent) -> Unit,
 ) {
-    println("en datailll userId: $userId")
     onEvent(PostEvent.GetPost(postId = postId!!.toInt()))
     val post = state.post
 

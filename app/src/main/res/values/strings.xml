@@ -20,4 +20,5 @@
     <string name="adoption_conditions_text">Condiciones de adopción</string>
     <string name="adoption_conditions_description_text">A continuación, debes marcar las condiciones con las cuales puedas cumplir.</string>
     <string name="item_logout">Cerrar sesión</string>
+    <string name="my_posts_text">Mis publicaciones</string>
 </resources>
