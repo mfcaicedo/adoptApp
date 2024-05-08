@@ -15,9 +15,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
@@ -46,17 +51,21 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -78,6 +87,9 @@ import co.edu.unicauca.adoptapp.ui.publications.PostState
 import co.edu.unicauca.adoptapp.ui.register_user.RegisterScreen
 import co.edu.unicauca.adoptapp.ui.register_user.UserRegisterEvent
 import co.edu.unicauca.adoptapp.ui.register_user.UserState
+import co.edu.unicauca.adoptapp.ui.theme.outlineDark
+import co.edu.unicauca.adoptapp.ui.theme.primaryDark
+import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -108,6 +120,11 @@ fun LearnNavDrawer(
                         drawerState.close()
                     }
                     navigationController.navigate(route)
+                    if (route == NavigationScreens.Login.screen) {
+                        scope.launch {
+                            onEvent(UserRegisterEvent.Logout)
+                        }
+                    }
                     //snackbarHostState.currentSnackbarData?.dismiss() //Cierra ventanas emergentes
                 },
                 onBackPress = {
@@ -117,7 +134,7 @@ fun LearnNavDrawer(
                         }
                     }
                 },
-                userId = navigationController.currentBackStackEntry?.arguments?.getString("userId")
+                userId = navigationController.currentBackStackEntry?.arguments?.getString("userId"),
             )
         },
     ) {
@@ -186,7 +203,7 @@ fun LearnNavDrawer(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Mi perfil")
+                        Text(text = stringResource(R.string.item_profile))
                     }
                 }
                 composable(NavigationScreens.CreatePost.screen) {
@@ -203,7 +220,7 @@ fun LearnNavDrawer(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Favoritos")
+                        Text(text = stringResource(R.string.item_favorites))
                     }
                 }
                 composable(NavigationScreens.Categories(1).screen) {
@@ -211,7 +228,7 @@ fun LearnNavDrawer(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Categorías")
+                        Text(text = stringResource(R.string.item_categories))
                     }
                 }
                 composable(NavigationScreens.MoreServices(1).screen) {
@@ -219,7 +236,7 @@ fun LearnNavDrawer(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Mas servicios")
+                        Text(text = stringResource(R.string.item_more_services))
                     }
                 }
                 composable(NavigationScreens.AboutUs(1).screen) {
@@ -227,7 +244,7 @@ fun LearnNavDrawer(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Sobre nosotros")
+                        Text(text = stringResource(R.string.item_about_us))
                     }
                 }
                 composable(NavigationScreens.Settings.screen) {
@@ -235,7 +252,7 @@ fun LearnNavDrawer(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Configuración")
+                        Text(text = stringResource(R.string.item_settings))
                     }
                 }
             }
@@ -294,6 +311,7 @@ fun MyDrawerContent(
     onBackPress: () -> Unit,
     userId: String?
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     val menu = listOf(
         MenuItem(
             title = stringResource(R.string.item_home),
@@ -340,6 +358,11 @@ fun MyDrawerContent(
             icon = Icons.Default.Settings,
             route = NavigationScreens.Settings.screen
         ),
+        MenuItem(
+            title = stringResource(R.string.item_logout),
+            icon = Icons.AutoMirrored.Filled.ExitToApp,
+            route = NavigationScreens.Login.screen
+        ),
     )
     ModalDrawerSheet(modifier) {
         Column(modifier.fillMaxSize()) {
@@ -374,11 +397,26 @@ fun MyDrawerContent(
                             )
                         },
                         onClick = {
-                            onItemSelected.invoke(menuList.route)
+                            if (menuList.title == "Cerrar sesión") {
+                                showDialog = true
+                               // onItemSelected.invoke(menuList.route)
+                            } else {
+                                onItemSelected.invoke(menuList.route)
+                            }
                         },
+
                     )
                     if (menuList == menu[4] || menuList == menu[6]){
                         Divider()
+                    }
+                    if (showDialog) {
+                        SuccessDialog(
+                            onDismissRequest = { showDialog = false },
+                            onConfirm = {
+                                showDialog = false
+                                onItemSelected.invoke(menuList.route)
+                            }
+                        )
                     }
                 }
             }
@@ -387,6 +425,44 @@ fun MyDrawerContent(
     BackPressHandler {
         onBackPress()
     }
+}
+
+@Composable
+fun SuccessDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(
+                text = "¿Está seguro de cerrar la sesión?",
+                color = Color.Black
+            )
+                },
+        confirmButton = {
+            Button(onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = primaryLight,
+                    disabledBackgroundColor = primaryDark,
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White
+                )) {
+                Text("Aceptar")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismissRequest,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = outlineDark,
+                    disabledBackgroundColor = outlineDark,
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White
+                )) {
+                Text("Cancelar")
+            }
+        }
+    )
 }
 
 @Composable

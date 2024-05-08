@@ -11,4 +11,5 @@ sealed interface UserRegisterEvent {
     object Register: UserRegisterEvent
     object Login: UserRegisterEvent
     object isLoading: UserRegisterEvent
+    object Logout: UserRegisterEvent
 }

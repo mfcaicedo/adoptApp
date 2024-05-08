@@ -99,6 +99,16 @@ class UserEntryViewModel(private val dao: UserDao) : ViewModel() {
                     }
                 }
             }
+            is UserRegisterEvent.Logout -> {
+                _state.update {
+                    it.copy(
+                        loginSuccess = false,
+                        userId = 0,
+                        email = "",
+                        password = ""
+                    )
+                }
+            }
             is UserRegisterEvent.SetUserId -> {
                 _state.update { it.copy(
                     userId = event.userId
