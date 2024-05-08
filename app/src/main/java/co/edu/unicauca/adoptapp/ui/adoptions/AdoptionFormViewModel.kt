@@ -16,6 +16,7 @@ class AdoptionFormViewModel (private val dao: AdoptionRequestDao) : ViewModel(){
     fun onEvent(event: AdoptionEvent){
         when(event){
             is AdoptionEvent.Register -> {
+                println("Register essssss ")
                 val date = state.value.date
                 val description = state.value.description
                 val postUserId = state.value.adoptionUserId

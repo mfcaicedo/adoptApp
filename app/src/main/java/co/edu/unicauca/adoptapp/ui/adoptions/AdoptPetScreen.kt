@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -27,10 +29,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,6 +47,8 @@ import co.edu.unicauca.adoptapp.ui.navigation.NavigationScreens
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostContent
 import co.edu.unicauca.adoptapp.ui.posts.DetailPostTopBar
 import co.edu.unicauca.adoptapp.ui.publications.PostEvent
+import co.edu.unicauca.adoptapp.ui.theme.primaryDark
+import co.edu.unicauca.adoptapp.ui.theme.primaryLight
 
 @Composable
 fun AdoptPetScreen(
@@ -115,10 +122,9 @@ fun AdoptPetContent(
     state: AdoptionState,
     onEvent: (AdoptionEvent) -> Unit,
     postId: String?,
-    userId: String?) {
-    println("AdoptPetContent")
-    println("postId: $postId")
-    println("userId: $userId")
+    userId: String?
+) {
+    var showDialog by remember { mutableStateOf(false) }
     val anyChecked = remember { mutableStateOf(false) }
     val conditionsChecked = remember { mutableStateOf(List(conditions.size) { false }) }
     onEvent(AdoptionEvent.SetPostUserId(userId?.toInt() ?: 0))
@@ -156,15 +162,53 @@ fun AdoptPetContent(
             }
             ConditionsList(conditions, conditionsChecked, anyChecked)
             Button(
-                onClick = {navigationController.navigate(NavigationScreens.Home.passId(state.adoptionUserId.toString()))  },
+                onClick = {
+                    onEvent(AdoptionEvent.Register)
+                    showDialog = true
+                          },
                 enabled = anyChecked.value
             ) {
                 Text("Adoptar Mascota")
             }
+
+            if (showDialog) {
+                SuccessDialog(
+                    onDismissRequest = { showDialog = false },
+                    onConfirm = {
+                        showDialog = false
+                        navigationController.navigate(NavigationScreens.Login.screen)
+                    }
+                )
+            }
+
         }
     }
 }
 
+@Composable
+fun SuccessDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text(
+            text = "Solicitud de adopción registrada!",
+            color = Color.Black
+        ) },
+        confirmButton = {
+            androidx.compose.material.Button(onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = primaryLight,
+                    disabledBackgroundColor = primaryDark,
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White
+                )) {
+               Text("OK")
+            }
+        }
+    )
+}
 
 @Composable
 fun ConditionsList(
